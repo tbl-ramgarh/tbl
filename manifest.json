@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "TBL ग्रुप ऑफ हॉस्टल्स",
-  "short_name": "TBL हॉस्टल्स",
-  "description": "TBL ग्रुप ऑफ हॉस्टल्स की सीट बुकिंग ऐप",
+  "name": "TBL (The Biggest Lottery)",
+  "short_name": "TBL लॉटरी",
+  "description": "TBL (The Biggest Lottery) की सीट बुकिंग ऐप",
   "lang": "hi",
   "start_url": "./",
   "scope": "./",
