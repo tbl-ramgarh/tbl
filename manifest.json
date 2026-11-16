@@ -1,0 +1,33 @@
+{
+  "id": "./",
+  "name": "TBL ग्रुप ऑफ हॉस्टल्स",
+  "short_name": "TBL हॉस्टल्स",
+  "description": "TBL ग्रुप ऑफ हॉस्टल्स की सीट बुकिंग ऐप",
+  "lang": "hi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F7F3",
+  "theme_color": "#0B3D2E",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

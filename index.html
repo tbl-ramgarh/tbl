@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B3D2E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>TBL हॉस्टल्स</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<style>
+:root{--deep:#0B3D2E;--green:#0F5A41;--gold:#D4AF37;--gold2:#E7CF8E;--bg:#F4F7F3;--ink:#10261c;--muted:#566a60;--line:#d3e0d8;--err:#a3231b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.45 Mukta,"Noto Sans Devanagari",system-ui,sans-serif;min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+.wrap{max-width:460px;margin:0 auto;padding:0 16px 40px}
+/* splash: ऐप खुलते समय एक बार चलने वाला एनिमेशन */
+#splash{position:fixed;inset:0;background:var(--deep);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:9;transition:opacity .6s,visibility .6s}
+#splash.out{opacity:0;visibility:hidden}
+.ring{width:132px;height:132px;position:relative}
+.ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke:var(--gold);stroke-width:3;stroke-dasharray:352;stroke-dashoffset:352;animation:draw 1.1s .15s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.logo{position:absolute;inset:12px;border-radius:50%;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:30px;color:var(--deep);animation:pop .7s .35s cubic-bezier(.2,1.4,.4,1) both}
+.logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#fff}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+#splash h1{color:var(--gold2);font-size:22px;margin:0;font-weight:800;animation:up .6s .8s both}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* header */
+.hero{background:var(--deep);color:#fff;margin:0 -16px 20px;padding:24px 20px 28px;border-radius:0 0 30px 30px;display:flex;align-items:center;gap:14px;position:relative}
+.hero:after{content:"";position:absolute;left:20px;right:20px;bottom:-1px;height:3px;background:var(--gold);border-radius:3px;transform-origin:left;animation:grow .9s .2s both}
+@keyframes grow{from{transform:scaleX(0)}}
+.hero .logo{position:relative;inset:auto;width:56px;height:56px;flex:none;font-size:17px;border:2px solid var(--gold);animation:none}
+.hero h1{margin:0;font-size:21px;font-weight:800;line-height:1.2}
+.hero p{margin:0;color:var(--gold2);font-size:14px}
+/* screens और कार्ड */
+.screen{animation:in .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.stg>*{animation:in .5s both}.stg>*:nth-child(2){animation-delay:.08s}.stg>*:nth-child(3){animation-delay:.16s}.stg>*:nth-child(4){animation-delay:.24s}.stg>*:nth-child(5){animation-delay:.32s}
+.card{background:#fff;border-radius:22px;padding:20px;border:1px solid var(--line);box-shadow:0 8px 24px rgba(11,61,46,.08)}
+.card.gold{background:#fbf5df;border-color:var(--gold2)}
+h2{font-size:20px;margin:0 0 4px;font-weight:800}
+.sub{color:var(--muted);margin:0 0 6px;font-size:15px}
+label{display:block;font-size:14px;font-weight:600;margin:14px 0 5px}
+input,textarea,select{width:100%;padding:13px 14px;font:inherit;color:var(--ink);background:#fbfdfb;border:1.5px solid var(--line);border-radius:12px;transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--gold);box-shadow:0 0 0 4px rgba(212,175,55,.28)}
+input[readonly],textarea[readonly]{background:#eef3ef;color:var(--muted)}
+textarea{resize:none;min-height:72px}
+.otp{letter-spacing:.5em;text-align:center;font-size:1.4rem;font-weight:800}
+button{font:inherit;font-weight:600;border:0;border-radius:14px;padding:14px 16px;cursor:pointer;width:100%;margin-top:18px;background:var(--green);color:#fff;position:relative;overflow:hidden;transition:transform .15s}
+button:active{transform:scale(.97)}
+button.gold{background:var(--gold);color:#2a1f00}
+button.gold:before{content:"";position:absolute;top:0;bottom:0;width:60px;left:-80px;background:rgba(255,255,255,.55);transform:skewX(-20deg);animation:shine 3.4s 1.2s infinite}
+@keyframes shine{to{left:120%}}
+button.ghost{background:transparent;color:var(--green);border:1.5px solid var(--line);margin-top:10px}
+button:disabled{opacity:.6;cursor:default}
+button.link{background:none;color:var(--green);padding:0;margin:0;width:auto;text-decoration:underline;font-size:15px}
+button[hidden],div[hidden]{display:none}
+.msg{margin-top:14px;padding:10px 12px;border-radius:12px;font-size:15px;display:none}
+.msg.err{display:block;background:#fbe9e7;color:var(--err);animation:shake .4s}
+.msg.ok{display:block;background:#e3f1e9;color:var(--green)}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.kv span{color:var(--muted)}.kv b{font-weight:600;text-align:right;word-break:break-word}
+.kv:first-of-type{border-top:0}
+.stg>.card{margin-bottom:14px}
+.hc.card{padding:0;overflow:hidden;margin-bottom:16px;animation:in .5s both}
+.ph{height:150px;background:#c9ddd1;color:#1c4a35;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;overflow:hidden}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.gf{position:absolute;left:12px;top:12px;background:var(--gold);color:#2a1f00;border-radius:16px;padding:5px 12px;font-size:14px;font-weight:600}
+.hb{padding:16px}.hb h3{margin:0;font-size:20px;font-weight:800}
+.big{display:flex;align-items:baseline;gap:8px;margin-top:12px}.big b{font-size:34px;font-weight:800;color:var(--green);line-height:1}.big span{font-size:14px;color:var(--muted)}
+.pt{position:relative;height:12px;background:#dce8e1;border-radius:6px;margin-top:8px;overflow:hidden}
+.pf{height:12px;background:var(--green);animation:fill 1s .2s both}@keyframes fill{from{width:0}}
+.pt:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(10% - 2px),#fff calc(10% - 2px),#fff 10%)}
+.chip{display:inline-block;background:#e3f1e9;color:var(--deep);border-radius:16px;padding:5px 12px;font-size:14px;margin:8px 6px 0 0}
+button.chip{width:auto;margin:0 6px 6px 0;padding:6px 12px;border-radius:16px}
+.two{display:flex;gap:10px;align-items:flex-end}.two>div{flex:1}.two input{flex:1}.two button.add{width:96px;margin:0;padding:13px 8px}
+.hint{font-size:13px;color:var(--muted);margin:4px 0 0}
+.th{position:relative;display:inline-block;margin:0 8px 8px 0}.th img{width:84px;height:84px;object-fit:cover;border-radius:12px;display:block}
+button.x{width:auto;margin:0;background:none;color:var(--muted);padding:4px 8px;border-radius:8px}
+.th button.x{position:absolute;top:-6px;right:-6px;background:#fff;border:1px solid var(--line);border-radius:50%;width:26px;height:26px;padding:0;font-size:12px}
+.tr{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:6px 0;font-size:15px}
+button.chip.on{background:var(--deep);color:#fff}
+.ck{display:flex;gap:10px;align-items:center;font-weight:400;font-size:16px;margin:6px 0 0}.ck input{width:22px;height:22px;padding:0}
+.qr{width:100%;max-width:240px;border-radius:12px;display:block}
+.bank{background:#eef3ef;border-radius:12px;padding:10px 14px;white-space:pre-wrap;font-size:15px}
+.shot{width:100%;border-radius:12px;margin-top:12px;display:block;max-height:320px;object-fit:cover}
+.acts{display:flex;gap:10px}.acts button{flex:1}
+.stc{display:inline-block;border-radius:10px;padding:2px 10px;font-size:13px;font-weight:600}
+.stc.pending{background:#fbf5df;color:#6b4b00}.stc.confirmed{background:#e3f1e9;color:var(--green)}.stc.rejected{background:#fbe9e7;color:var(--err)}
+.bdg{display:inline-block;background:var(--gold);color:#2a1f00;border-radius:12px;min-width:22px;padding:0 7px;margin-left:8px;font-size:14px;animation:pop .5s}.bdg[hidden]{display:none}
+.p{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}.p:first-child{border-top:0}
+.av{width:42px;height:42px;border-radius:50%;background:#e3f1e9;color:var(--green);font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.p b{letter-spacing:1px}.p .stc{margin-left:auto}
+.win{margin-top:12px;background:#fbf5df;border-radius:12px;padding:10px 12px;font-size:15px}.win b{display:block}.win span{color:var(--muted);font-size:13px}
+.rl{margin-top:14px;background:var(--deep);color:#fff;border-radius:18px;padding:18px;text-align:center}.rl small{display:block;color:var(--gold2)}
+.rl b{display:block;font-size:32px;letter-spacing:3px;color:var(--gold);margin:6px 0}.rl span{color:var(--gold2);font-size:14px}
+.rl p{margin:12px 0 0;font-size:14px;border-top:1px solid #1f5b46;padding-top:10px}.rl.won{animation:pop .7s cubic-bezier(.2,1.4,.4,1)}
+.dng{color:var(--err);border-color:#e8c4c0}
+.sk{height:230px;border-radius:22px;margin-bottom:16px;background:linear-gradient(90deg,#e6eee9 25%,#f4f8f5 50%,#e6eee9 75%);background-size:200% 100%;animation:sh 1.2s infinite}@keyframes sh{to{background-position:-200% 0}}
+.urg{display:inline-block;background:#fbe9e7;color:var(--err);border-radius:12px;padding:3px 10px;font-size:13px;font-weight:600;margin:10px 6px 0 0;animation:pulse 1.6s infinite}@keyframes pulse{50%{transform:scale(1.06)}}
+.urg2{display:inline-block;background:#fbf5df;color:#6b4b00;border-radius:12px;padding:3px 10px;font-size:13px;font-weight:600;margin-top:10px}
+.gal{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.gal img{position:static;flex:none;width:100%;height:100%;scroll-snap-align:center}
+a.btn2{display:flex;align-items:center;justify-content:center;flex:1;min-height:46px;border:1.5px solid var(--line);border-radius:14px;color:var(--green);font-weight:600;text-decoration:none;background:#fff}
+.dup{margin-top:12px;background:#fbe9e7;color:var(--err);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:600}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.tile{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;animation:in .5s both}
+.tile b{display:block;font-size:26px;font-weight:800;color:var(--green)}.tile span{font-size:13px;color:var(--muted)}
+.ticket{border:2px dashed var(--gold);border-radius:18px;padding:18px;background:#fffdf3;text-align:center}.ticket b.no{font-size:26px;letter-spacing:2px;color:var(--deep)}.ticket .kv{text-align:left}
+.flash{animation:flash 1.6s 2}@keyframes flash{0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}30%{box-shadow:0 0 0 6px rgba(212,175,55,.55)}}
+/* ===== नया डिज़ाइन: नेविगेशन, कार्ड, शीट, स्टेपर ===== */
+h1,h2,h3,.hn{font-family:'Tiro Devanagari Hindi',Mukta,serif;font-weight:400}
+h2{font-size:21px}small,.hint,.stc,.chip{font-size:14px}.kv{font-size:16px}
+.top{display:flex;align-items:center;gap:12px;background:var(--deep);color:#fff;margin:0 -16px 16px;padding:calc(14px + env(safe-area-inset-top)) 16px 18px;border-radius:0 0 26px 26px;position:relative}
+.top:after{content:"";position:absolute;left:20px;right:20px;bottom:-1px;height:3px;background:var(--gold);border-radius:3px;transform-origin:left;animation:grow .9s .2s both}
+.top b{display:block;font-size:18px}.top small{color:var(--gold2)}
+.logo.sm{position:relative;inset:auto;width:44px;height:44px;flex:none;font-size:14px;border:2px solid var(--gold);animation:none}
+button.bk2{width:42px;height:42px;padding:0;margin:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;flex:none;display:flex;align-items:center;justify-content:center}
+.how{display:flex;gap:8px;margin-bottom:18px}.how div{flex:1;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 6px;font-size:14px;font-weight:600;text-align:center;line-height:1.25}
+.how i{display:flex;width:26px;height:26px;margin:0 auto 6px;border-radius:50%;background:var(--gold);color:#2a1f00;font-style:normal;font-weight:800;align-items:center;justify-content:center}
+.sec{margin:6px 2px 12px}
+.hc{background:#fff;border-radius:24px;overflow:hidden;margin-bottom:18px;box-shadow:0 10px 28px rgba(11,61,46,.12);cursor:pointer;animation:in .5s both}
+.hp{position:relative;height:220px;background:#c9ddd1;color:#1c4a35;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hp>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.gr{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.28) 0,transparent 38%,rgba(5,30,22,.88) 100%);pointer-events:none}
+.ttl{position:absolute;left:16px;right:16px;bottom:12px;color:#fff;pointer-events:none}.ttl h3{margin:0;font-size:24px;line-height:1.2;color:#fff}.ttl span{font-size:14px;color:var(--gold2)}
+.rib{position:absolute;left:0;top:16px;background:linear-gradient(90deg,#E7CF8E,#D4AF37);color:#2a1500;padding:6px 16px 6px 14px;border-radius:0 14px 14px 0;box-shadow:0 4px 12px rgba(0,0,0,.25);pointer-events:none;max-width:70%}
+.rib small{display:block;font-size:12px;font-weight:600}.rib b{font-size:18px;line-height:1.1}
+.hot{position:absolute;right:12px;top:16px;background:#c0392b;color:#fff;border-radius:14px;padding:4px 12px;font-size:13px;font-weight:600;animation:pulse 1.6s infinite;pointer-events:none}
+.hb .acts button{margin-top:12px}
+nav#nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--deep);border-radius:22px 22px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:6}
+#nav[hidden]{display:none}
+#nav button{flex:1;margin:0;background:transparent;color:#a9cdb9;padding:8px 2px;border-radius:16px;font-size:12px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px}
+#nav button.on{background:#1f6b4f;color:#fff}
+#nav .nb{position:absolute;top:2px;right:16%;background:var(--gold);color:#2a1f00;border-radius:10px;min-width:18px;font-size:11px;font-style:normal;font-weight:800;padding:0 5px}
+.hasnav .wrap{padding-bottom:100px}
+.cta{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;gap:12px;align-items:center;z-index:5}
+.cta button{margin:0;flex:1}.cta b{font-size:22px;color:var(--green)}.cta small{display:block;color:var(--muted)}
+.ov{position:fixed;inset:0;background:rgba(5,30,22,.55);display:flex;align-items:flex-end;z-index:30;animation:fade .2s}.ov.out{opacity:0;transition:opacity .2s}
+.sh{background:#fff;width:100%;max-width:460px;margin:0 auto;border-radius:24px 24px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom));animation:up2 .25s}
+.sh h3{margin:0 0 6px;font-size:22px}.sh .acts{margin-top:14px}.sh button{margin:0}.sh input{margin-top:10px}
+button.dg{background:var(--err);color:#fff}
+@keyframes fade{from{opacity:0}}@keyframes up2{from{transform:translateY(100%)}}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(96px + env(safe-area-inset-bottom));max-width:428px;margin:0 auto;padding:12px 16px;border-radius:14px;color:#fff;font-weight:600;z-index:40;animation:in .3s;transition:opacity .4s}
+.toast.err{background:var(--err)}.toast.ok{background:var(--green)}.toast.out{opacity:0}
+.stp{display:flex;margin:4px 0 16px}.stp div{flex:1;text-align:center;font-size:14px;color:var(--muted);position:relative}
+.stp i{display:flex;width:30px;height:30px;margin:0 auto 4px;border-radius:50%;background:#dce8e1;color:var(--muted);font-style:normal;font-weight:800;align-items:center;justify-content:center;position:relative;z-index:1;transition:.3s}
+.stp .on i{background:var(--gold);color:#2a1f00;transform:scale(1.1)}.stp .dn i{background:var(--green);color:#fff}
+.stp div+div:before{content:"";position:absolute;left:-50%;right:50%;top:14px;height:3px;background:#dce8e1}.stp .on:before,.stp .dn:before{background:var(--green)}
+a.lnk{display:block;text-align:center;padding:14px;border-radius:14px;background:var(--gold);color:#2a1f00;font-weight:600;text-decoration:none;margin-top:14px}
+.drop{border:2px dashed #9fc4b0;border-radius:18px;min-height:150px;display:flex;align-items:center;justify-content:center;color:var(--green);font-weight:600;margin-top:12px;overflow:hidden;cursor:pointer}.drop img{width:100%;max-height:340px;object-fit:contain}
+.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.fi{background:#eef5f0;border-radius:14px;padding:12px 6px;text-align:center;font-size:14px;color:var(--deep);display:flex;flex-direction:column;align-items:center;gap:6px;line-height:1.2}
+.gl{position:relative;height:280px;margin:0 -16px;background:#c9ddd1;overflow:hidden;color:#1c4a35;display:flex;align-items:center;justify-content:center}
+.gl .gal{position:absolute;inset:0}.gl>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.gl button.bk2{position:absolute;left:12px;top:calc(12px + env(safe-area-inset-top));z-index:2;background:rgba(0,0,0,.45)}
+.cnt{position:absolute;right:12px;bottom:36px;background:rgba(0,0,0,.55);color:#fff;border-radius:12px;padding:2px 10px;font-size:13px}
+.dt{margin:-24px -16px 0;position:relative;background:var(--bg);border-radius:24px 24px 0 0;padding:20px 16px 110px}
+.dt h1{margin:0;font-size:28px;line-height:1.2}
+.rib2{display:flex;gap:12px;align-items:center;background:linear-gradient(90deg,#fbf0c8,#f4dd8a);border:1px solid var(--gold);border-radius:18px;padding:12px 14px;margin:14px 0;color:#2a1500}
+.rib2 small{display:block;font-size:14px}.rib2 b{font-size:20px}
+.inst{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--gold);border-radius:18px;padding:10px 12px;margin-bottom:16px}
+.inst b{display:block}.inst small{color:var(--muted);line-height:1.25;display:block}.inst button{margin:0;width:auto;padding:8px 14px}
+.okc circle{stroke-dasharray:176;stroke-dashoffset:176;animation:draw .7s .1s forwards}.okc path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw .5s .6s forwards}
+.wr{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}.wr .card{min-width:230px}
+button.sm{width:auto;margin:0;padding:8px 16px}
+.shotv{background:rgba(0,0,0,.92);align-items:center;justify-content:center}
+.shotv .sc{overflow:auto;max-width:100%;max-height:100%;touch-action:pan-x pan-y pinch-zoom}.shotv img{max-width:100%;display:block;margin:auto}
+.shotv button.x{position:fixed;top:14px;right:14px;background:#fff;color:#000;border-radius:50%;width:44px;height:44px;padding:0;z-index:2;font-size:18px}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}button.gold:before{animation:none}}
+</style>
+</head>
+<body>
+<script>
+window.__fatal = function (m) {
+  if (window.__shown) return; window.__shown = true;
+  var s = document.getElementById('splash'); if (s) s.style.display = 'none';
+  var d = document.createElement('div');
+  d.style.cssText = 'position:fixed;left:12px;right:12px;top:12px;z-index:99;background:#fff;border:2px solid #b3261e;border-radius:14px;padding:14px;font:15px/1.5 sans-serif;color:#10261c;word-break:break-word';
+  d.textContent = 'ऐप शुरू नहीं हो पाई (संस्करण 2026-11-16-e)। यह संदेश स्क्रीनशॉट में भेजो: ' + m;
+  document.body.appendChild(d);
+};
+window.addEventListener('error', function (e) { window.__fatal((e.message || 'error') + ' (लाइन ' + e.lineno + ')'); });
+window.addEventListener('unhandledrejection', function (e) { window.__fatal(String(e.reason && (e.reason.message || e.reason))); });
+setTimeout(function () { if (!window.__ok) window.__fatal('बहुत देर तक लोड नहीं हुआ'); }, 15000);
+</script>
+<div id="splash"><div class="ring"><svg viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="56"/></svg><div class="logo" id="sl"><span>TBL</span></div></div><h1>TBL ग्रुप ऑफ हॉस्टल्स</h1></div>
+<div class="wrap" id="app"></div>
+<nav id="nav" hidden></nav>
+<script>
+/* ====== सिर्फ ये बदलो: Apps Script का Web App URL ====== */
+const CONFIG = { API_URL: 'https:' + '/' + '/script.google.com/macros/s/AKfycbwFepsA6I9S91coSMOvEdfWJByXEmCTIgxEDEDB1pvArkXwI-A8qnYTGdS80zpE0qvWBQ/exec' };
+/* ======================================================= */
+const LS = (() => { try { localStorage.setItem('_t', '1'); localStorage.removeItem('_t'); return localStorage; } catch (e) { const m = {}; return { getItem: k => (k in m ? m[k] : null), setItem: (k, v) => { m[k] = String(v); }, removeItem: k => { delete m[k]; } }; } })();
+const $ = i => document.getElementById(i), app = $('app'), val = i => $(i).value.trim();
+let me = null, S = { app_name: 'TBL ग्रुप ऑफ हॉस्टल्स', logo: '' };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function api(action, data = {}) {
+  const body = JSON.stringify({ action, token: LS.getItem('tok') || undefined, ...data });
+  let r;
+  try { r = await fetch(CONFIG.API_URL, { method: 'POST', body }); }
+  catch (e) { return { ok: false, error: 'इंटरनेट या सर्वर से जुड़ नहीं पाए।' }; }
+  try { return await r.json(); }
+  catch (e) { return { ok: false, error: 'सर्वर का जवाब समझ नहीं आया। Apps Script का URL जाँचो।' }; }
+}
+const msg = (t, k) => { const e = $('m'); if (!e) return; e.className = 'msg ' + (k || 'err'); e.textContent = t; };
+async function busy(b, fn) { const o = b.textContent; b.disabled = true; b.textContent = 'रुको...'; try { await fn(); } finally { b.disabled = false; b.textContent = o; } }
+function cool(b, s = 30) {
+  b.disabled = true; b.textContent = `दोबारा भेजो (${s}s)`;
+  const t = setInterval(() => { s--; if (s <= 0) { clearInterval(t); b.disabled = false; b.textContent = 'OTP दोबारा भेजो'; } else b.textContent = `दोबारा भेजो (${s}s)`; }, 1000);
+}
+const logo = () => '<span>TBL</span>' + (S.logo ? `<img src="${esc(S.logo)}" alt="" onerror="this.remove()">` : '');
+const hero = sub => `<div class="hero"><div class="logo">${logo()}</div><div><h1>${esc(S.app_name)}</h1><p>${esc(sub)}</p></div></div>`;
+const show = html => { clearInterval(HT); hideNav(); app.innerHTML = `<div class="screen">${html}</div>`; window.scrollTo(0, 0); };
+const MOB = /^[6-9]\d{9}$/;
+
+/* ---------- लॉगिन ---------- */
+function viewLogin(pre = '', note = '') {
+  show(`${hero('अपने खाते में लॉगिन करो')}
+  <div class="card stg">
+    <div><h2>लॉगिन</h2><p class="sub">खाता बनाते समय रखा पासवर्ड डालो।</p></div>
+    <div><label for="e">ईमेल</label><input id="e" type="email" inputmode="email" autocomplete="username" value="${esc(pre)}">
+    <label for="p">पासवर्ड</label><input id="p" type="password" autocomplete="current-password"></div>
+    <button class="gold" id="go">लॉगिन करो</button>
+    <div id="m" class="msg"></div>
+    <div style="margin-top:14px"><button class="link" id="fg">पासवर्ड भूल गए?</button></div>
+  </div>
+  <button class="ghost" id="su">नया खाता बनाओ</button>`);
+  if (note) msg(note, 'ok');
+  const go = $('go');
+  const run = () => busy(go, async () => {
+    const r = await api('login', { email: val('e'), password: $('p').value });
+    if (!r.ok) return msg(r.error);
+    LS.setItem('tok', r.token); me = r.user; viewHome();
+  });
+  go.onclick = run; $('p').onkeydown = e => { if (e.key === 'Enter') run(); };
+  $('fg').onclick = () => viewForgot(); $('su').onclick = () => viewSignup();
+}
+
+/* ---------- नया खाता ---------- */
+function viewSignup() {
+  show(`${hero('नया खाता बनाओ')}
+  <div class="card stg">
+    <div><h2>अपनी जानकारी भरो</h2></div>
+    <div><label for="n">नाम</label><input id="n" autocomplete="name">
+    <label for="mo">मोबाइल नंबर</label><input id="mo" inputmode="numeric" maxlength="10" autocomplete="tel">
+    <label for="e">ईमेल</label><input id="e" type="email" inputmode="email" autocomplete="email">
+    <label for="a">पूरा पता</label><textarea id="a" autocomplete="street-address"></textarea>
+    <label for="pw">पासवर्ड (कम से कम 6 अक्षर)</label><input id="pw" type="password" autocomplete="new-password">
+    <label for="pw2">पासवर्ड दोबारा</label><input id="pw2" type="password" autocomplete="new-password"></div>
+    <button class="gold" id="send">OTP भेजो</button>
+    <div id="ob" hidden><label for="o">ईमेल पर आया OTP (6 अंक)</label><input id="o" class="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+      <button id="fin">खाता बनाओ</button><button class="ghost" id="rs">OTP दोबारा भेजो</button></div>
+    <div id="m" class="msg"></div>
+  </div>
+  <button class="ghost" id="bk">वापस लॉगिन पर</button>`);
+  $('bk').onclick = () => viewLogin();
+  const send = $('send'), rs = $('rs'), fin = $('fin');
+  send.onclick = () => {
+    if (val('n').length < 2) return msg('अपना नाम लिखो।');
+    if (!MOB.test(val('mo'))) return msg('सही 10 अंक का मोबाइल नंबर डालो।');
+    if (val('a').length < 5) return msg('अपना पूरा पता लिखो।');
+    if ($('pw').value.length < 6) return msg('पासवर्ड कम से कम 6 अक्षर का रखो।');
+    if ($('pw').value !== $('pw2').value) return msg('दोनों पासवर्ड एक जैसे नहीं हैं।');
+    busy(send, async () => {
+      const r = await api('requestOtp', { email: val('e'), purpose: 'signup' });
+      if (!r.ok) return msg(r.error);
+      ['n', 'mo', 'e', 'a', 'pw', 'pw2'].forEach(i => $(i).readOnly = true);
+      send.hidden = true; $('ob').hidden = false; msg(r.msg, 'ok'); cool(rs); $('o').focus();
+    });
+  };
+  rs.onclick = async () => {
+    let ok = false;
+    await busy(rs, async () => { const r = await api('requestOtp', { email: val('e'), purpose: 'signup' }); ok = r.ok; msg(r.ok ? r.msg : r.error, r.ok ? 'ok' : 'err'); });
+    if (ok) cool(rs);
+  };
+  fin.onclick = () => busy(fin, async () => {
+    const r = await api('signup', { email: val('e'), otp: val('o'), name: val('n'), mobile: val('mo'), address: val('a'), password: $('pw').value });
+    if (!r.ok) return msg(r.error);
+    LS.setItem('tok', r.token); me = r.user; viewHome();
+  });
+}
+
+/* ---------- पासवर्ड भूल गए ---------- */
+function viewForgot() {
+  show(`${hero('पासवर्ड रीसेट करो')}
+  <div class="card stg">
+    <div><h2>पासवर्ड रीसेट</h2><p class="sub">ईमेल पर OTP आएगा।</p></div>
+    <div><label for="e">ईमेल</label><input id="e" type="email" inputmode="email" autocomplete="username"></div>
+    <button class="gold" id="send">OTP भेजो</button>
+    <div id="ob" hidden><label for="o">OTP (6 अंक)</label><input id="o" class="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+      <label for="p1">नया पासवर्ड (कम से कम 6 अक्षर)</label><input id="p1" type="password" autocomplete="new-password">
+      <label for="p2">नया पासवर्ड दोबारा</label><input id="p2" type="password" autocomplete="new-password">
+      <button id="fin">पासवर्ड बदलो</button><button class="ghost" id="rs">OTP दोबारा भेजो</button></div>
+    <div id="m" class="msg"></div>
+  </div>
+  <button class="ghost" id="bk">वापस लॉगिन पर</button>`);
+  $('bk').onclick = () => viewLogin();
+  const send = $('send'), rs = $('rs'), fin = $('fin');
+  send.onclick = () => busy(send, async () => {
+    const r = await api('requestOtp', { email: val('e'), purpose: 'reset' });
+    if (!r.ok) return msg(r.error);
+    $('e').readOnly = true; send.hidden = true; $('ob').hidden = false; msg(r.msg, 'ok'); cool(rs); $('o').focus();
+  });
+  rs.onclick = async () => {
+    let ok = false;
+    await busy(rs, async () => { const r = await api('requestOtp', { email: val('e'), purpose: 'reset' }); ok = r.ok; msg(r.ok ? r.msg : r.error, r.ok ? 'ok' : 'err'); });
+    if (ok) cool(rs);
+  };
+  fin.onclick = () => busy(fin, async () => {
+    if ($('p1').value !== $('p2').value) return msg('दोनों पासवर्ड एक जैसे नहीं हैं।');
+    const r = await api('resetPassword', { email: val('e'), otp: val('o'), password: $('p1').value });
+    if (!r.ok) return msg(r.error);
+    viewLogin(val('e'), 'पासवर्ड बदल गया। अब नए पासवर्ड से लॉगिन करो।');
+  });
+}
+
+/* ---------- होम ---------- */
+
+/* ---------- हॉस्टल ---------- */
+const MON = ['जनवरी','फ़रवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर'];
+const fd = d => { const [y, m, x] = String(d).split('-'); return x && m ? `${+x} ${MON[+m - 1]}` : ''; };
+function compress(file, max = 900, q = .75) {
+  return new Promise((res, rej) => {
+    const im = new Image(), u = URL.createObjectURL(file);
+    im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas');
+      c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+      c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg', q)); };
+    im.onerror = () => rej(new Error('img')); im.src = u;
+  });
+}
+let NH;
+function viewNewHostel(h) {
+  NH = h ? { photos: [...h.photos], qr: h.qr || '', fac: [...h.facilities], terms: [...h.terms] } : { photos: [], qr: '', fac: [], terms: [] };
+  show(`${hero(h ? 'हॉस्टल बदलो' : 'नया हॉस्टल जोड़ो')}<div class="stg">
+  <div class="card"><h2>हॉस्टल की जानकारी</h2>
+    <label for="hn">हॉस्टल का नाम</label><input id="hn">
+    <label>फोटो (3 तक)</label><div id="pv"></div><button class="ghost" id="pp" style="margin-top:4px">फोटो चुनो</button><input id="pf" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+    <label for="hs">कुल सीट</label><input id="hs" inputmode="numeric">
+    <div class="two"><div><label for="d1">ऑफर शुरू</label><input id="d1" type="date"></div><div><label for="d2">ऑफर खत्म</label><input id="d2" type="date"></div></div>
+    <label for="on">मालिक का नाम</label><input id="on"><label for="om">मालिक का मोबाइल</label><input id="om" inputmode="numeric" maxlength="10"><label for="mp">Google Maps लिंक (वैकल्पिक)</label><input id="mp" inputmode="url" placeholder="Google Maps का लिंक यहाँ चिपकाओ"></div>
+  <div class="card"><h2>गिफ्ट</h2><label for="gt">गिफ्ट का प्रकार</label><select id="gt"><option>नकद</option><option>सामान</option></select>
+    <label for="gv">रकम या सामान का नाम</label><input id="gv" placeholder="₹11,000 या स्मार्ट वॉच"><p class="hint">यह सभी छात्रों को "गिफ्ट" के नाम से दिखेगा।</p></div>
+  <div class="card"><h2>बुकिंग फीस और पेमेंट</h2><label for="fe">बुकिंग फीस (₹)</label><input id="fe" inputmode="numeric">
+    <p class="hint">छात्र यही रकम ऑनलाइन देगा। हॉस्टल की बाकी फीस मालिक से तय होगी।</p>
+    <label for="up">UPI ID</label><input id="up"><label for="bn">बैंक डिटेल</label><textarea id="bn" placeholder="नाम, खाता नंबर, IFSC"></textarea>
+    <label>QR कोड</label><div id="qv"></div><button class="ghost" id="qp" style="margin-top:4px">QR चुनो</button><input id="qf" type="file" accept="image/jpeg,image/png,image/webp" hidden></div>
+  <div class="card"><h2>सुविधाएँ</h2><div id="fl" style="margin-top:10px"></div><div class="two"><input id="fi" aria-label="नई सुविधा" placeholder="जैसे WiFi, मेस"><button class="add" id="fa">जोड़ो</button></div></div>
+  <div class="card"><h2>नियम और शर्तें</h2><div id="tl" style="margin-top:6px"></div><div class="two"><input id="ti" aria-label="नई शर्त" placeholder="नई शर्त लिखो"><button class="add" id="ta">जोड़ो</button></div></div>
+  <button class="gold" id="sv">${h ? 'बदलाव सेव करो' : 'हॉस्टल सेव करो'}</button><div id="m" class="msg"></div><button class="ghost" id="bk">वापस</button></div>`);
+  const draw = () => {
+    $('pv').innerHTML = NH.photos.map((p, i) => `<span class="th"><img src="${p}" alt=""><button class="x" data-k="p" data-i="${i}" aria-label="हटाओ">✕</button></span>`).join('');
+    $('qv').innerHTML = NH.qr ? `<span class="th"><img src="${NH.qr}" alt=""><button class="x" data-k="q" aria-label="हटाओ">✕</button></span>` : '';
+    $('fl').innerHTML = NH.fac.map((t, i) => `<button class="chip" data-k="f" data-i="${i}">${esc(t)} ✕</button>`).join('');
+    $('tl').innerHTML = NH.terms.map((t, i) => `<div class="tr"><span>${i + 1}. ${esc(t)}</span><button class="x" data-k="t" data-i="${i}" aria-label="हटाओ">✕</button></div>`).join('');
+    app.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { const k = b.dataset.k, i = +b.dataset.i;
+      if (k === 'p') NH.photos.splice(i, 1); if (k === 'q') NH.qr = ''; if (k === 'f') NH.fac.splice(i, 1); if (k === 't') NH.terms.splice(i, 1); draw(); });
+  };
+  draw();
+  if (h) { $('hn').value = h.name; $('hs').value = h.seats; $('d1').value = h.offerStart; $('d2').value = h.offerEnd; $('on').value = h.ownerName; $('om').value = h.ownerMobile;
+    $('gt').value = h.giftType; $('gv').value = h.gift; $('fe').value = h.fee; $('up').value = h.upi || ''; $('bn').value = h.bank || ''; $('mp').value = h.map || ''; }
+  $('bk').onclick = viewHome;
+  $('pp').onclick = () => $('pf').click(); $('qp').onclick = () => $('qf').click();
+  $('pf').onchange = async e => { for (const f of [...e.target.files]) { if (NH.photos.length >= 3) break; try { NH.photos.push(await compress(f)); } catch (x) {} } e.target.value = ''; draw(); };
+  $('qf').onchange = async e => { try { NH.qr = await compress(e.target.files[0], 700, .85); } catch (x) {} e.target.value = ''; draw(); };
+  const adder = (inp, arr, max) => () => { const v = val(inp); if (v && NH[arr].length < 20) { NH[arr].push(v.slice(0, max)); $(inp).value = ''; draw(); } };
+  $('fa').onclick = adder('fi', 'fac', 60); $('ta').onclick = adder('ti', 'terms', 200);
+  const sv = $('sv');
+  sv.onclick = () => busy(sv, async () => {
+    const ph = x => x.startsWith('data:') ? x : 'id:' + ((x.match(/id=([\w-]+)/) || [])[1] || '');
+    const r = await api(h ? 'adminEditHostel' : 'adminAddHostel', { id: h && h.id, name: val('hn'), seats: val('hs'), offerStart: $('d1').value, offerEnd: $('d2').value,
+      ownerName: val('on'), ownerMobile: val('om'), giftType: $('gt').value, gift: val('gv'), fee: val('fe'),
+      upi: val('up'), bank: val('bn'), map: val('mp'), photos: NH.photos.map(ph), qr: NH.qr ? ph(NH.qr) : '', facilities: NH.fac, terms: NH.terms });
+    if (!r.ok) { if (r.error === 'SESSION') { LS.removeItem('tok'); me = null; return viewLogin(); } return msg(r.error); }
+    viewHome();
+  });
+}
+
+/* ---------- बुकिंग ---------- */
+const ST = { pending: 'जाँच बाकी', confirmed: 'पक्की', rejected: 'रद्द' };
+const tm = ms => new Date(ms).toLocaleString('hi-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+const sessOut = () => { LS.removeItem('tok'); me = null; viewLogin(); };
+async function viewAdminBookings(st = 'pending') {
+  show(`${hero('बुकिंग जाँचो')}<div class="stg"><div id="ft"></div><div id="bl"><p class="sub">लोड हो रहा है...</p></div></div>`);
+  setNav('b');
+  const r = await api('adminBookings');
+  if (!r.ok) { if (r.error === 'SESSION') return sessOut(); $('bl').innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
+  const render = f => {
+    $('ft').innerHTML = Object.keys(ST).map(k => `<button class="chip ${k === f ? 'on' : ''}" data-f="${k}">${ST[k]} (${r.bookings.filter(b => b.status === k).length})</button>`).join('');
+    const list = r.bookings.filter(b => b.status === f);
+    $('bl').innerHTML = list.length ? list.map(b => `<div class="card" style="margin-top:12px"><h2>${esc(b.name)}</h2><p class="sub">${esc(b.hostel)}, ${tm(b.created)}</p>
+      <div class="kv"><span>मोबाइल</span><b>${esc(b.mobile)}</b></div><div class="kv"><span>ईमेल</span><b>${esc(b.email)}</b></div><div class="kv"><span>पता</span><b>${esc(b.address)}</b></div>
+      ${b.dup ? `<div class="dup">सावधान: यह स्क्रीनशॉट ${esc(b.dup)} की बुकिंग से मिलता-जुलता है। ध्यान से जाँचो।</div>` : ''}${b.status === 'rejected' && b.note ? `<p class="hint">रद्द करने का कारण: ${esc(b.note)}</p>` : ''}
+      <div class="acts" style="margin-top:12px"><a class="btn2" href="tel:${esc(b.mobile)}">कॉल</a><a class="btn2" target="_blank" rel="noopener" href="https:${SL}wa.me/91${esc(b.mobile)}">WhatsApp</a></div>
+      <button class="ghost" style="margin-top:12px" data-shot="${esc(b.id)}">स्क्रीनशॉट देखो</button>
+      ${f !== 'rejected' ? `<div class="acts" style="margin-top:14px">${f === 'pending' ? `<button data-d="confirm" data-id="${esc(b.id)}">पक्की करो</button>` : ''}<button class="ghost" data-d="reject" data-id="${esc(b.id)}">रद्द करो</button></div>` : ''}</div>`).join('') : '<div class="card" style="margin-top:12px"><p class="sub" style="margin:0">कोई बुकिंग नहीं है।</p></div>';
+    app.querySelectorAll('[data-f]').forEach(b => b.onclick = () => render(b.dataset.f));
+    app.querySelectorAll('[data-shot]').forEach(b => b.onclick = () => busy(b, async () => { const x = await api('adminShot', { id: b.dataset.shot }); if (!x.ok) return toast(x.error); showShot(x.data); }));
+    app.querySelectorAll('[data-d]').forEach(b => b.onclick = async () => {
+      let note = ''; if (b.dataset.d === 'reject') { note = await sheet({ title: 'बुकिंग रद्द करें?', text: 'कारण छात्र को दिखेगा। सीट वापस खुल जाएगी।', input: 'रद्द करने का कारण', ok: 'रद्द करो', danger: true }); if (!note) return; }
+      busy(b, async () => { const x = await api('adminDecide', { id: b.dataset.id, decision: b.dataset.d, note });
+        if (!x.ok) return toast(x.error); toast(b.dataset.d === 'confirm' ? 'बुकिंग पक्की हो गई' : 'बुकिंग रद्द हो गई', 'ok'); viewAdminBookings(f); });
+    });
+  };
+  render(st);
+}
+
+/* ---------- छात्रों की सूची, सूचनाएँ और गिफ्ट ड्रॉ ---------- */
+async function viewStudents(hid = '') {
+  show(`${hero('हॉस्टल के छात्र')}<div class="stg"><p class="sub">पारदर्शिता के लिए नाम और नंबर आधे छुपे हैं।</p><div id="ft"></div><div class="card" id="sl3"><p class="sub">लोड हो रहा है...</p></div></div>`);
+  setNav('s');
+  const r = await api('students');
+  if (!r.ok) { if (r.error === 'SESSION') return sessOut(); $('sl3').innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
+  const hs = [...new Map(r.students.map(s => [s.hostelId, s.hostel])).entries()];
+  const render = f => {
+    $('ft').innerHTML = `<button class="chip ${f === '' ? 'on' : ''}" data-f="">सभी हॉस्टल</button>` + hs.map(([id, n]) => `<button class="chip ${f === id ? 'on' : ''}" data-f="${esc(id)}">${esc(n)}</button>`).join('');
+    const list = r.students.filter(s => !f || s.hostelId === f);
+    $('sl3').innerHTML = list.length ? list.map(s => `<div class="p"><span class="av">${esc([...s.name][0])}</span><div><b>${esc(s.name)}</b><br><small>${esc(s.mobile)}, ${esc(s.hostel)}</small></div><span class="stc ${s.status}">${ST[s.status]}</span></div>`).join('') : '<p class="sub" style="margin:0">अभी कोई बुकिंग नहीं है।</p>';
+    app.querySelectorAll('[data-f]').forEach(b => b.onclick = () => render(b.dataset.f));
+  };
+  render(hid);
+}
+function roulette(el, x) {
+  return new Promise(res => {
+    el.innerHTML = '<div class="rl"><small>लकी छात्र चुना जा रहा है...</small><b id="rn">...</b></div>';
+    const rn = el.querySelector('#rn'); let i = 0, delay = 60;
+    const step = () => {
+      if (i++ < 28) { rn.textContent = x.pool[Math.floor(Math.random() * x.pool.length)]; delay += 6; return setTimeout(step, delay); }
+      el.innerHTML = `<div class="rl won"><small>गिफ्ट विजेता</small><b>${esc(x.winner.name)}</b><span>${esc(x.winner.mobile)} · ${x.winner.eligible} पक्के छात्रों में से</span>
+        <p>असली नाम (सिर्फ एडमिन के लिए): ${esc(x.contact.name)}, ${esc(x.contact.mobile)}</p></div>`;
+      confetti(); res();
+    };
+    step();
+  });
+}
+async function viewNotices() {
+  show(`${hero('सूचनाएँ और गिफ्ट ड्रॉ')}<div class="stg"><div id="nl"><p class="sub">लोड हो रहा है...</p></div><button class="ghost" id="bk">वापस</button></div>`);
+  $('bk').onclick = viewHome;
+  const r = await api('adminNotices');
+  if (!r.ok) { if (r.error === 'SESSION') return sessOut(); $('nl').innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
+  if (!r.notices.length) { $('nl').innerHTML = '<div class="card"><p class="sub" style="margin:0">अभी कोई नई सूचना नहीं है।</p></div>'; return; }
+  $('nl').innerHTML = r.notices.map(n => `<div class="card" style="margin-bottom:14px"><h2>${esc(n.name)} फुल हो गया</h2>
+    <div class="big"><b>${n.seats}/${n.seats}</b><span>सीट भर गईं</span></div>
+    <p class="sub" style="margin-top:8px">गिफ्ट: ${esc(n.gift)}<br>पक्की: ${n.confirmed}, जाँच बाकी: ${n.pending}</p>
+    ${n.ready ? `<button class="gold" data-draw="${esc(n.id)}">लकी छात्र चुनो</button><p class="hint" style="text-align:center">ड्रॉ सिर्फ एक बार चलता है।</p>` : '<button class="ghost" disabled>पहले सभी बुकिंग जाँचो</button>'}
+    <div id="d_${esc(n.id)}"></div></div>`).join('');
+  app.querySelectorAll('[data-draw]').forEach(b => b.onclick = async () => {
+    if (!(await ask('ड्रॉ चलाएँ?', 'ड्रॉ सिर्फ एक बार चलता है और वापस नहीं होगा।', 'ड्रॉ चलाओ', false))) return;
+    busy(b, async () => { const x = await api('adminDraw', { hostelId: b.dataset.draw }); if (!x.ok) return toast(x.error);
+      await roulette($('d_' + b.dataset.draw), x); b.hidden = true; });
+  });
+}
+async function viewAdminStudents() {
+  show(`${hero('सभी छात्र')}<div class="stg"><input id="q" placeholder="नाम, मोबाइल या ईमेल खोजो" aria-label="खोजो"><div id="sl4" style="margin-top:12px"></div></div>`);
+  setNav('s');
+  const r = await api('adminUsers');
+  if (!r.ok) { if (r.error === 'SESSION') return sessOut(); $('sl4').innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
+  const draw = () => {
+    const q = val('q').toLowerCase(), list = r.users.filter(u => (u.name + u.mobile + u.email).toLowerCase().includes(q));
+    $('sl4').innerHTML = `<p class="sub">कुल ${list.length} खाते</p>` + list.map(u => `<div class="card" style="margin-bottom:12px"><h2>${esc(u.name)} ${u.role === 'admin' ? '<span class="stc confirmed">एडमिन</span>' : ''} ${u.status === 'blocked' ? '<span class="stc rejected">बंद</span>' : ''}</h2>
+      <div class="kv"><span>मोबाइल</span><b>${esc(u.mobile || '-')}</b></div><div class="kv"><span>ईमेल</span><b>${esc(u.email)}</b></div><div class="kv"><span>पता</span><b>${esc(u.address || '-')}</b></div>
+      ${u.email === me.email ? '' : `<button class="ghost" data-e="${esc(u.email)}" data-s="${u.status === 'blocked' ? 'active' : 'blocked'}">${u.status === 'blocked' ? 'चालू करो' : 'खाता बंद करो'}</button><button class="ghost" data-ro="${esc(u.email)}" data-rl="${u.role === 'admin' ? 'user' : 'admin'}">${u.role === 'admin' ? 'एडमिन हटाओ' : 'एडमिन बनाओ'}</button>`}</div>`).join('');
+    app.querySelectorAll('[data-e]').forEach(b => b.onclick = () => busy(b, async () => {
+      const x = await api('adminStatus', { email: b.dataset.e, status: b.dataset.s }); if (!x.ok) return toast(x.error); viewAdminStudents(); }));
+    app.querySelectorAll('[data-ro]').forEach(b => b.onclick = async () => {
+      const mk = b.dataset.rl === 'admin';
+      if (!(await ask(mk ? 'एडमिन बनाएँ?' : 'एडमिन हटाएँ?', mk ? 'यह व्यक्ति सभी छात्रों की जानकारी और पेमेंट स्क्रीनशॉट देख सकेगा।' : 'यह सिर्फ छात्र रह जाएगा।', mk ? 'एडमिन बनाओ' : 'हटाओ', !mk))) return;
+      busy(b, async () => { const x = await api('adminRole', { email: b.dataset.ro, role: b.dataset.rl }); if (!x.ok) return toast(x.error); toast('हो गया', 'ok'); viewAdminStudents(); });
+    });
+  };
+  $('q').oninput = draw; draw();
+}
+
+/* ---------- अपग्रेड: तेज़ लोडिंग, बैज, कॉल/WhatsApp, रसीद, आँकड़े, कन्फेटी ---------- */
+const SL = '/' + '/';
+const APP_V = '2026-11-16-e';
+let SRV_V = '';
+let HT, LH = '';
+function confetti() {
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  const c = document.createElement('canvas'); c.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:20';
+  c.width = innerWidth; c.height = innerHeight; document.body.appendChild(c);
+  const g = c.getContext('2d'), cols = ['#D4AF37', '#E7CF8E', '#0F5A41', '#3fae7a', '#ffffff'];
+  const p = Array.from({ length: 90 }, () => ({ x: c.width / 2, y: c.height * .35, vx: (Math.random() - .5) * 14, vy: Math.random() * -12 - 3, s: 4 + Math.random() * 5, k: cols[Math.random() * cols.length | 0], r: Math.random() * 6 }));
+  let f = 0;
+  (function tick() {
+    g.clearRect(0, 0, c.width, c.height);
+    p.forEach(q => { q.x += q.vx; q.y += q.vy; q.vy += .35; q.r += .2; g.save(); g.translate(q.x, q.y); g.rotate(q.r); g.fillStyle = q.k; g.fillRect(-q.s / 2, -q.s / 2, q.s, q.s * 1.6); g.restore(); });
+    if (++f < 110) requestAnimationFrame(tick); else c.remove();
+  })();
+}
+/* फोटो की "पहचान" (dHash): एक ही स्क्रीनशॉट दोबारा आए तो एडमिन को चेतावनी दिखे */
+function dhash(src) {
+  return new Promise(res => {
+    const im = new Image();
+    im.onload = () => {
+      const c = document.createElement('canvas'); c.width = 9; c.height = 8; const g = c.getContext('2d'); g.drawImage(im, 0, 0, 9, 8);
+      const d = g.getImageData(0, 0, 9, 8).data, L = i => d[i] * .3 + d[i + 1] * .59 + d[i + 2] * .11; let bits = '';
+      for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) { const a = (y * 9 + x) * 4; bits += L(a) > L(a + 4) ? '1' : '0'; }
+      let h = ''; for (let i = 0; i < 64; i += 4) h += parseInt(bits.slice(i, i + 4), 2).toString(16); res(h);
+    };
+    im.onerror = () => res(''); im.src = src;
+  });
+}
+function shareHostel(id) {
+  const url = location.origin + location.pathname + '#h=' + id;
+  if (navigator.share) navigator.share({ title: S.app_name, text: 'इस हॉस्टल की सीट बुक करो:', url }).catch(() => {});
+  else { navigator.clipboard?.writeText(url); toast('लिंक कॉपी हो गया', 'ok'); }
+}
+async function viewLog() {
+  show(`${hero('गतिविधि का रिकॉर्ड')}<div class="stg"><div class="card" id="lgl"><p class="sub">लोड हो रहा है...</p></div><button class="ghost" id="bk">वापस</button></div>`);
+  $('bk').onclick = viewHome;
+  const r = await api('adminLog');
+  if (!r.ok) { if (r.error === 'SESSION') return sessOut(); $('lgl').innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
+  $('lgl').innerHTML = r.log.length ? r.log.map(x => `<div class="kv"><span>${esc(x.action)}<br><small>${esc(x.detail)}</small></span><b>${esc(x.who)}<br><small>${tm(x.time)}</small></b></div>`).join('') : '<p class="sub" style="margin:0">अभी कोई रिकॉर्ड नहीं है।</p>';
+}
+function viewReceipt(x) {
+  const txt = `${S.app_name}\nबुकिंग नंबर: ${x.id}\nनाम: ${x.name}\nहॉस्टल: ${x.hostel}\nबुकिंग फीस: ₹${x.fee}\nहालत: सीट पक्की`;
+  show(`${hero('बुकिंग की रसीद')}<div class="stg"><div class="ticket"><small>बुकिंग नंबर</small><br><b class="no">${esc(x.id)}</b>
+    <div class="kv"><span>नाम</span><b>${esc(x.name)}</b></div><div class="kv"><span>हॉस्टल</span><b>${esc(x.hostel)}</b></div>
+    <div class="kv"><span>बुकिंग फीस</span><b>₹${x.fee}</b></div><div class="kv"><span>पक्की होने का समय</span><b>${tm(x.decided || x.created)}</b></div>
+    <p style="margin:12px 0 0;color:var(--green);font-weight:800">सीट पक्की</p></div>
+    <button class="gold" id="sh">रसीद शेयर करो</button><button class="ghost" id="bk">वापस</button></div>`);
+  $('bk').onclick = viewMine;
+  $('sh').onclick = () => navigator.share ? navigator.share({ text: txt }).catch(() => {}) : window.open('https:' + SL + 'wa.me/?text=' + encodeURIComponent(txt), '_blank');
+  confetti();
+}
+
+/* ---------- नया डिज़ाइन: आइकन, डिब्बे, नेविगेशन ---------- */
+let HL = [], HAS = false, TAB = '', DP = null;
+const IC = { wifi: 'M2 9a15 15 0 0120 0M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0M12 19.5h.01', food: 'M7 3v8M5 3v5a2 2 0 004 0V3M7 11v10M17 3c-2 2-3 5-3 8h3v10',
+  bolt: 'M13 2L4 14h7l-1 8 9-12h-7z', cctv: 'M3 8h13v8H3zM16 11l5-3v8l-5-3', water: 'M12 3s6 6 6 11a6 6 0 01-12 0c0-5 6-11 6-11z', study: 'M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 19V5',
+  ac: 'M3 6h18v6H3zM6 15v3M12 15v4M18 15v3', ok: 'M5 13l4 4L19 7', hostel: 'M4 21V5l8-3 8 3v16M9 21v-5h6v5M8 9h2M14 9h2M8 13h2M14 13h2', book: 'M9 4h6v3H9zM6 5h12v16H6zM9 14l2 2 4-4',
+  users: 'M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3 3-5 6-5s6 2 6 5M17 8a3 3 0 010 6M21 20c0-2-1-3.5-3-4.5', user: 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 4-6 8-6s8 2 8 6',
+  dash: 'M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z', phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z',
+  wa: 'M21 12a9 9 0 01-13.5 7.8L3 21l1.3-4.4A9 9 0 1121 12z', pin: 'M12 21s7-6 7-11a7 7 0 00-14 0c0 5 7 11 7 11zM12 12a2 2 0 100-4 2 2 0 000 4z', share: 'M4 12v7h16v-7M12 3v12M8 7l4-4 4 4',
+  gift: 'M3 9h18v4H3zM5 13v8h14v-8M12 9v12M12 9C9 9 8 5 10 4s3 3 2 5zM12 9c3 0 4-4 2-5s-3 3-2 5z', back: 'M15 5l-7 7 7 7' };
+const ico = (d, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+function facIcon(f) {
+  const t = String(f).toLowerCase();
+  const m = [[/wifi|wi-fi|वाई|इंटरनेट|internet/, 'wifi'], [/मेस|खाना|भोजन|mess|food|टिफिन/, 'food'], [/बिजली|इन्वर्टर|inverter|backup|बैकअप|power/, 'bolt'], [/cctv|सीसीटीवी|कैमरा|camera|सुरक्षा/, 'cctv'],
+    [/पानी|\bro\b|water|आर\s?ओ/, 'water'], [/पढ़ाई|लाइब्रेरी|library|study|रीडिंग/, 'study'], [/\bac\b|एसी|कूलर|cooler|पंखा/, 'ac']].find(([re]) => re.test(t));
+  return IC[m ? m[1] : 'ok'];
+}
+function toast(t, k = 'err') {
+  const e = document.createElement('div'); e.className = 'toast ' + k; e.textContent = t; document.body.appendChild(e);
+  navigator.vibrate?.(k === 'ok' ? 12 : [20, 40, 20]); setTimeout(() => e.classList.add('out'), 2800); setTimeout(() => e.remove(), 3300);
+}
+function sheet({ title, text = '', input, ok = 'ठीक है', cancel = 'रहने दो', danger }) {
+  return new Promise(res => {
+    const w = document.createElement('div'); w.className = 'ov';
+    w.innerHTML = `<div class="sh" role="dialog" aria-modal="true"><h3>${esc(title)}</h3>${text ? `<p class="sub">${esc(text)}</p>` : ''}${input ? `<input id="shi" placeholder="${esc(input)}">` : ''}<div class="acts"><button class="ghost" id="shc">${esc(cancel)}</button><button class="${danger ? 'dg' : 'gold'}" id="sho">${esc(ok)}</button></div></div>`;
+    document.body.appendChild(w);
+    const done = v => { w.classList.add('out'); setTimeout(() => w.remove(), 200); res(v); };
+    w.onclick = e => { if (e.target === w) done(null); };
+    $('shc').onclick = () => done(null);
+    $('sho').onclick = () => { if (input) { const v = $('shi').value.trim(); if (!v) return $('shi').focus(); done(v); } else done(true); };
+    if (input) $('shi').focus();
+  });
+}
+const ask = (title, text, ok, danger = true) => sheet({ title, text, ok, danger });
+const NAVS = { student: [['h', 'हॉस्टल', 'hostel'], ['m', 'मेरी बुकिंग', 'book'], ['s', 'छात्र', 'users'], ['p', 'प्रोफाइल', 'user']],
+  admin: [['d', 'डैशबोर्ड', 'dash'], ['b', 'बुकिंग', 'book'], ['h', 'हॉस्टल', 'hostel'], ['s', 'छात्र', 'users'], ['p', 'प्रोफाइल', 'user']] };
+function setNav(active) {
+  const n = $('nav'); TAB = active;
+  n.innerHTML = NAVS[me.role === 'admin' ? 'admin' : 'student'].map(([k, l, i]) => `<button class="${k === active ? 'on' : ''}" data-t="${k}">${ico(IC[i])}<span>${l}</span></button>`).join('');
+  n.hidden = false; document.body.classList.add('hasnav'); n.querySelectorAll('button').forEach(b => b.onclick = () => goTab(b.dataset.t));
+}
+function hideNav() { $('nav').hidden = true; document.body.classList.remove('hasnav'); }
+const setBadge = (k, n) => { const b = document.querySelector(`#nav button[data-t="${k}"]`); if (b && n) b.insertAdjacentHTML('beforeend', `<i class="nb">${n}</i>`); };
+function goTab(t) {
+  if (t === 'p') return viewProfile();
+  if (me.role === 'admin') return ({ d: viewDash, b: () => viewAdminBookings(), h: viewHostelsTab, s: viewAdminStudents })[t]();
+  return ({ h: viewHostels, m: viewMine, s: () => viewStudents() })[t]();
+}
+function viewHome() { me.role === 'admin' ? viewDash() : viewHostels(); }
+const topbar = (t, sub) => `<div class="top"><div class="logo sm">${logo()}</div><div><b>${esc(t)}</b><small>${esc(sub || '')}</small></div></div>`;
+
+/* ---------- हॉस्टल कार्ड, सूची, पूरा पेज ---------- */
+const gal = h => h.photos.length > 1 ? `<div class="gal">${h.photos.map(p => `<img src="${esc(p)}" alt="" loading="lazy" decoding="async">`).join('')}</div>` : h.photos[0] ? `<img src="${esc(h.photos[0])}" alt="" loading="lazy" decoding="async">` : `<span style="display:flex;flex-direction:column;align-items:center;gap:6px">${ico(IC.hostel, 40)}हॉस्टल की फोटो</span>`;
+function cd(h) {
+  const td = new Date().toLocaleDateString('en-CA');
+  if (h.filled >= h.seats) return 'सीट फुल';
+  if (td < h.offerStart) return 'ऑफर ' + fd(h.offerStart) + ' से';
+  const ms = new Date(h.offerEnd + 'T23:59:59') - Date.now();
+  return ms > 0 ? `ऑफर: ${Math.floor(ms / 864e5)} दिन ${Math.floor(ms % 864e5 / 36e5)} घंटे बाकी` : 'ऑफर खत्म';
+}
+function bstate(h) {
+  const td = new Date().toLocaleDateString('en-CA');
+  if (h.mine === 'confirmed') return ['आपकी सीट पक्की है', 1];
+  if (h.mine === 'pending') return ['आपकी बुकिंग जाँच में है', 1];
+  if (h.filled >= h.seats) return ['सीट फुल, बुकिंग बंद', 1];
+  if (td < h.offerStart) return ['ऑफर ' + fd(h.offerStart) + ' से शुरू', 1];
+  if (td > h.offerEnd) return ['ऑफर खत्म', 1];
+  if (HAS) return ['आपकी एक बुकिंग पहले से है', 1];
+  return ['सीट बुक करो', 0];
+}
+function hcard(h, admin) {
+  const left = h.seats - h.filled, p = Math.min(100, Math.round(h.filled / h.seats * 100)), [label, dis] = bstate(h);
+  return `<article class="hc" data-open="${esc(h.id)}" data-hid="${esc(h.id)}"><div class="hp">${gal(h)}<div class="gr"></div>
+    <span class="rib"><small>गिफ्ट जीतो</small><b>${esc(h.gift)}</b></span>${left > 0 && left <= Math.max(5, Math.ceil(h.seats * .1)) ? `<span class="hot">सिर्फ ${left} सीट बाकी</span>` : ''}
+    <div class="ttl"><h3>${esc(h.name)}</h3><span>मालिक: ${esc(h.ownerName)}</span></div></div>
+    <div class="hb"><div class="big"><b>${h.filled}/${h.seats}</b><span>सीट भर गईं${left > 0 ? `, ${left} बाकी` : ''}</span></div>
+    <div class="pt" role="progressbar" aria-label="सीट भरी" aria-valuenow="${h.filled}" aria-valuemin="0" aria-valuemax="${h.seats}"><div class="pf" style="width:${p}%"></div></div>
+    <div class="kv" style="border:0"><span>बुकिंग फीस <b>₹${h.fee}</b></span><span>${cd(h)}</span></div>
+    ${h.draw ? `<div class="win"><b>गिफ्ट विजेता: ${esc(h.draw.name)}</b><span>${esc(h.draw.mobile)} · ${h.draw.eligible} पक्के छात्रों में से, ${tm(h.draw.at)}</span></div>` : ''}
+    ${admin ? `<div class="acts"><button class="ghost" data-edit="${esc(h.id)}">बदलो</button><button class="ghost dng" data-del="${esc(h.id)}">हटाओ</button></div>`
+      : `<button class="${dis ? 'ghost' : 'gold'}" ${dis ? 'disabled' : `data-book="${esc(h.id)}"`}>${label}</button>`}</div></article>`;
+}
+function hostelsInto(el, admin) {
+  const draw = r => {
+    if (!el.isConnected) return;
+    if (!r.ok) { if (r.error === 'SESSION') return sessOut(); el.innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
+    HL = r.hostels; HAS = r.hasActive;
+    el.innerHTML = HL.length ? HL.map(h => hcard(h, admin)).join('') : '<div class="card"><p class="sub" style="margin:0">अभी कोई हॉस्टल नहीं जुड़ा है।</p></div>';
+    const hm = /^#h=(.+)$/.exec(location.hash);
+    if (hm) { const c = el.querySelector(`[data-hid="${CSS.escape(hm[1])}"]`); if (c) { c.scrollIntoView({ behavior: 'smooth', block: 'center' }); c.classList.add('flash'); } try { history.replaceState(null, '', location.pathname); } catch (x) {} }
+  };
+  el.onclick = async e => {
+    const bk = e.target.closest('[data-book]'); if (bk) return viewBook(bk.dataset.book);
+    const ed = e.target.closest('[data-edit]'); if (ed) return viewNewHostel(HL.find(h => h.id === ed.dataset.edit));
+    const dl = e.target.closest('[data-del]');
+    if (dl) {
+      const h = HL.find(y => y.id === dl.dataset.del);
+      if (!(await ask('हॉस्टल हटाएँ?', `"${h.name}" हमेशा के लिए हट जाएगा।`, 'हटाओ'))) return;
+      const d = await api('adminDeleteHostel', { id: h.id }); if (!d.ok) return toast(d.error);
+      toast('हॉस्टल हट गया', 'ok'); LS.removeItem('c_hostels'); return viewHostelsTab();
+    }
+    const c = e.target.closest('[data-open]'); if (c) viewHostel(c.dataset.open);
+  };
+  let c = null; try { c = JSON.parse(LS.getItem('c_hostels') || 'null'); } catch (x) {}
+  if (c && c.ok && c.email === me.email) { LH = JSON.stringify(c); draw(c); } else { LH = ''; el.innerHTML = '<div class="sk"></div><div class="sk"></div>'; }
+  const go = async () => {
+    const r = await api('hostels'); if (!el.isConnected) return;
+    if (r.ok) { r.email = me.email; try { LS.setItem('c_hostels', JSON.stringify(r)); LS.setItem('c_hostels_t', String(Date.now())); } catch (x) {} }
+    const j = JSON.stringify(r); if (j === LH) return; LH = j; draw(r);
+  };
+  if (!(c && c.ok && c.email === me.email && Date.now() - Number(LS.getItem('c_hostels_t') || 0) < 8000)) go();
+  HT = setInterval(go, 30000);
+}
+function installBanner() {
+  if (isStandalone || LS.getItem('noinst')) return '';
+  return `<div class="inst" id="ib">${ico(IC.hostel, 28)}<div style="flex:1"><b>ऐप फ़ोन में रखो</b><small>${isIOS ? 'Safari में शेयर बटन दबाकर "Add to Home Screen" चुनो' : 'एक टैप में होम स्क्रीन पर आ जाएगा'}</small></div>${isIOS ? '' : '<button id="ii">इंस्टॉल</button>'}<button class="x" id="ix" aria-label="बंद करो">✕</button></div>`;
+}
+const isIOS = /iphone|ipad/i.test(navigator.userAgent), isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); DP = e; });
+async function doInstall() { if (DP) { DP.prompt(); await DP.userChoice; DP = null; $('ib')?.remove(); } else toast('ब्राउज़र के मेन्यू में "Install app" चुनो', 'ok'); }
+function viewHostels() {
+  show(`${topbar(S.app_name, 'नमस्ते, ' + me.name.split(' ')[0])}${installBanner()}
+    <div class="how"><div><i>1</i>सीट बुक करो</div><div><i>2</i>हॉस्टल फुल हो</div><div><i>3</i>गिफ्ट ड्रॉ, सबके सामने</div></div>
+    <h2 class="sec">हॉस्टल</h2><div id="hl"></div><div id="ww"></div>`);
+  setNav('h');
+  if ($('ii')) $('ii').onclick = doInstall;
+  if ($('ix')) $('ix').onclick = () => { LS.setItem('noinst', '1'); $('ib').remove(); };
+  hostelsInto($('hl'), false); setTimeout(loadWinners, 1500);
+}
+async function loadWinners() {
+  const r = await api('winners'), b = $('ww'); if (!b || !r.ok || !r.winners.length) return;
+  b.innerHTML = `<h2 class="sec" style="margin-top:8px">गिफ्ट विजेता</h2><div class="wr">${r.winners.map(w => `<div class="card"><small class="sub">${esc(w.hostel)}</small>
+    <div style="font-size:22px;font-weight:800;letter-spacing:2px;color:var(--green)">${esc(w.name)}</div><p class="sub" style="margin:0">${esc(w.mobile)}</p>
+    <span class="chip">${esc(w.gift)}</span><p class="hint">${w.eligible} पक्के छात्रों में से, ${tm(w.at)}</p></div>`).join('')}</div>`;
+}
+function viewHostel(id) {
+  const h = HL.find(x => x.id === id); if (!h) return viewHome();
+  const admin = me.role === 'admin', left = h.seats - h.filled, p = Math.min(100, Math.round(h.filled / h.seats * 100)), [label, dis] = bstate(h);
+  const wa = encodeURIComponent(`नमस्ते, मुझे ${h.name} के बारे में जानकारी चाहिए।`);
+  show(`<div class="gl">${gal(h)}<button class="bk2" id="bk" aria-label="वापस">${ico(IC.back)}</button>${h.photos.length > 1 ? `<span class="cnt" id="cnt">1/${h.photos.length}</span>` : ''}</div>
+    <div class="dt stg"><h1>${esc(h.name)}</h1>
+    <div class="rib2">${ico(IC.gift, 30)}<div><small>गिफ्ट जीतो (${esc(h.giftType)})</small><b>${esc(h.gift)}</b></div></div>
+    <div class="card"><div class="big"><b>${h.filled}/${h.seats}</b><span>सीट भर गईं${left > 0 ? `, ${left} बाकी` : ''}</span></div>
+      <div class="pt"><div class="pf" style="width:${p}%"></div></div><p class="hint" style="margin-top:8px">${cd(h)}</p></div>
+    <div class="card"><h2>मालिक से बात करो</h2><p class="sub">${esc(h.ownerName)}, ${esc(h.ownerMobile)}</p>
+      <div class="acts"><a class="btn2" href="tel:${esc(h.ownerMobile)}">${ico(IC.phone, 18)}&nbsp;कॉल</a><a class="btn2" target="_blank" rel="noopener" href="https:${SL}wa.me/91${esc(h.ownerMobile)}?text=${wa}">${ico(IC.wa, 18)}&nbsp;WhatsApp</a></div>
+      ${h.map ? `<div class="acts" style="margin-top:10px"><a class="btn2" target="_blank" rel="noopener" href="${esc(h.map)}">${ico(IC.pin, 18)}&nbsp;नक्शे पर देखो</a></div>` : ''}</div>
+    ${h.facilities.length ? `<div class="card"><h2>सुविधाएँ</h2><div class="fg">${h.facilities.map(f => `<div class="fi">${ico(facIcon(f), 24)}<span>${esc(f)}</span></div>`).join('')}</div></div>` : ''}
+    ${h.terms.length ? `<div class="card"><h2>नियम और शर्तें</h2>${h.terms.map((t, i) => `<div class="tr"><span>${i + 1}. ${esc(t)}</span></div>`).join('')}</div>` : ''}
+    <button class="ghost" id="sr">${ico(IC.share, 18)}&nbsp;शेयर करो</button></div>
+    ${admin ? '' : `<div class="cta"><div><small>बुकिंग फीस</small><b>₹${h.fee}</b></div><button class="${dis ? 'ghost' : 'gold'}" id="bb" ${dis ? 'disabled' : ''}>${label}</button></div>`}`);
+  $('bk').onclick = () => goTab(TAB || 'h');
+  $('sr').onclick = () => shareHostel(id);
+  if ($('bb')) $('bb').onclick = () => viewBook(id);
+  const g = document.querySelector('.gl .gal'); if (g && $('cnt')) g.onscroll = () => { $('cnt').textContent = (Math.round(g.scrollLeft / g.clientWidth) + 1) + '/' + h.photos.length; };
+}
+
+/* ---------- बुकिंग: 3 कदम ---------- */
+async function viewBook(id) {
+  show(`<div class="top"><button class="bk2" id="bk" aria-label="वापस">${ico(IC.back)}</button><div><b>सीट बुक करो</b><small id="bs">लोड हो रहा है...</small></div></div><div id="st"></div><div id="bd"></div>`);
+  $('bk').onclick = () => viewHostel(id);
+  const r = await api('bookingInfo', { hostelId: id });
+  if (!r.ok) { if (r.error === 'SESSION') return sessOut(); toast(r.error); return viewHome(); }
+  const h = r.hostel; let step = 1, shot = '', ph = '', agree = false;
+  $('bs').textContent = h.name;
+  const upiUrl = h.upi ? `upi:${SL}pay?pa=${encodeURIComponent(h.upi)}&pn=${encodeURIComponent(S.app_name)}&am=${h.fee}&cu=INR&tn=${encodeURIComponent('Hostel booking')}` : '';
+  const done = () => {
+    LS.removeItem('c_hostels');
+    show(`${topbar('बुकिंग भेज दी गई', 'जाँच के बाद सीट पक्की होगी')}<div class="card stg" style="text-align:center"><svg class="okc" width="96" height="96" viewBox="0 0 64 64" fill="none" stroke="#0F5A41" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M20 33l8 8 17-18"/></svg>
+      <h2>धन्यवाद, ${esc(me.name.split(' ')[0])}</h2><p class="sub">आपका स्क्रीनशॉट एडमिन को मिल गया है। तब तक सीट आपके लिए रुकी रहेगी।</p>
+      <button class="gold" id="mb2">मेरी बुकिंग देखो</button><button class="ghost" id="hm">हॉस्टल पर जाओ</button></div>`);
+    $('mb2').onclick = viewMine; $('hm').onclick = viewHome; confetti();
+  };
+  const draw = () => {
+    $('st').innerHTML = `<div class="stp">${['भुगतान', 'स्क्रीनशॉट', 'पुष्टि'].map((t, i) => `<div class="${step > i + 1 ? 'dn' : step === i + 1 ? 'on' : ''}"><i>${step > i + 1 ? '✓' : i + 1}</i>${t}</div>`).join('')}</div>`;
+    let body, foot;
+    if (step === 1) {
+      body = `<div class="card"><div class="big"><b>₹${h.fee}</b><span>सिर्फ बुकिंग फीस</span></div><p class="hint">हॉस्टल की बाकी फीस मालिक (${esc(h.ownerName)}, ${esc(h.ownerMobile)}) से तय होगी।</p>
+        ${upiUrl ? `<a class="lnk" href="${esc(upiUrl)}">UPI ऐप से भुगतान करो</a><p class="hint" style="text-align:center">भुगतान के बाद इसी ऐप में वापस आकर स्क्रीनशॉट डालो।</p>` : ''}
+        ${h.upi ? `<label for="up">UPI ID</label><div class="two"><input id="up" value="${esc(h.upi)}" readonly><button class="add ghost" id="cp">कॉपी</button></div>` : ''}
+        ${h.qr ? `<label>QR कोड</label><img class="qr" src="${esc(h.qr)}" alt="QR कोड">` : ''}${h.bank ? `<label>बैंक डिटेल</label><div class="bank">${esc(h.bank)}</div>` : ''}</div>`;
+      foot = '<button class="gold" id="nx">भुगतान कर दिया, आगे बढ़ो</button>';
+    } else if (step === 2) {
+      body = `<div class="card"><h2>भुगतान का स्क्रीनशॉट</h2><div class="drop" id="dp">${shot ? `<img src="${shot}" alt="">` : 'स्क्रीनशॉट चुनो'}</div><input id="sf" type="file" accept="image/jpeg,image/png,image/webp" hidden></div>`;
+      foot = `<button class="ghost" id="pv">पीछे</button><button class="gold" id="nx" ${shot ? '' : 'disabled'}>आगे</button>`;
+    } else {
+      body = `<div class="card"><h2>पुष्टि करो</h2><div class="kv"><span>हॉस्टल</span><b>${esc(h.name)}</b></div><div class="kv"><span>बुकिंग फीस</span><b>₹${h.fee}</b></div><div class="kv"><span>नाम</span><b>${esc(me.name)}</b></div><div class="kv"><span>मोबाइल</span><b>${esc(me.mobile || '')}</b></div></div>
+        ${h.terms.length ? `<div class="card" style="margin-top:14px"><h2>नियम और शर्तें</h2>${h.terms.map((t, i) => `<div class="tr"><span>${i + 1}. ${esc(t)}</span></div>`).join('')}</div>` : ''}
+        <label class="ck"><input type="checkbox" id="ag" ${agree ? 'checked' : ''}> मैंने शर्तें पढ़ ली हैं</label>`;
+      foot = '<button class="ghost" id="pv">पीछे</button><button class="gold" id="nx">बुकिंग भेजो</button>';
+    }
+    $('bd').innerHTML = `<div class="screen">${body}</div><div style="height:96px"></div><div class="cta">${foot}</div>`;
+    if ($('cp')) $('cp').onclick = () => { navigator.clipboard?.writeText(h.upi); toast('UPI ID कॉपी हो गया', 'ok'); };
+    if ($('pv')) $('pv').onclick = () => { step--; draw(); };
+    if ($('ag')) $('ag').onchange = e => { agree = e.target.checked; };
+    if ($('dp')) { $('dp').onclick = () => $('sf').click(); $('sf').onchange = async e => { try { shot = await compress(e.target.files[0], 1000, .7); ph = await dhash(shot); } catch (x) { toast('फोटो नहीं खुली, दूसरी चुनो'); } draw(); }; }
+    $('nx').onclick = () => {
+      if (step < 3) { step++; return draw(); }
+      if (!$('ag').checked) return toast('पहले शर्तों पर टिक करो');
+      busy($('nx'), async () => { const x = await api('book', { hostelId: id, shot, ph }); if (!x.ok) { if (x.error === 'SESSION') return sessOut(); return toast(x.error); } done(); });
+    };
+  };
+  draw();
+}
+
+/* ---------- मेरी बुकिंग, प्रोफाइल, एडमिन डैशबोर्ड ---------- */
+async function viewMine() {
+  show(`${topbar('मेरी बुकिंग', 'आपकी सीट की हालत')}<div id="ml"><div class="sk" style="height:110px"></div></div>`);
+  setNav('m');
+  const r = await api('myBookings'), b = $('ml'); if (!b) return;
+  if (!r.ok) { if (r.error === 'SESSION') return sessOut(); b.innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
+  if (!r.bookings.length) { b.innerHTML = `<div class="card" style="text-align:center"><div style="color:var(--green)">${ico(IC.book, 40)}</div><h2>अभी कोई बुकिंग नहीं</h2><p class="sub">हॉस्टल चुनो और अपनी सीट पक्की करो।</p><button class="gold" id="gh">हॉस्टल देखो</button></div>`; $('gh').onclick = viewHostels; return; }
+  b.innerHTML = r.bookings.map(x => `<div class="card" style="margin-bottom:14px"><div class="kv" style="border:0;padding:0"><span><b style="color:var(--ink);font-size:18px">${esc(x.hostel)}</b><br><small>${tm(x.created)}</small></span><b><span class="stc ${x.status}">${ST[x.status]}</span></b></div>
+    ${x.status === 'rejected' && x.note ? `<p class="hint" style="color:var(--err)">कारण: ${esc(x.note)}। नया स्क्रीनशॉट डालकर दोबारा बुक कर सकते हो।</p>` : ''}
+    ${x.status === 'confirmed' ? `<button class="ghost" style="margin-top:10px" data-rc="${esc(x.id)}">रसीद देखो</button>` : ''}</div>`).join('');
+  b.querySelectorAll('[data-rc]').forEach(y => y.onclick = () => viewReceipt(r.bookings.find(z => z.id === y.dataset.rc)));
+}
+function viewProfile() {
+  show(`${topbar('प्रोफाइल', me.role === 'admin' ? 'एडमिन' : 'छात्र')}<div class="stg">
+    <div class="card"><div class="kv"><span>नाम</span><b>${esc(me.name)}</b></div><div class="kv"><span>ईमेल</span><b>${esc(me.email)}</b></div><div class="kv"><span>मोबाइल</span><b>${esc(me.mobile || '-')}</b></div><div class="kv"><span>पता</span><b>${esc(me.address || '-')}</b></div><div class="kv"><span>संस्करण</span><b>ऐप ${APP_V}<br>सर्वर ${esc(SRV_V || 'पुराना')}</b></div></div>
+    <div class="card"><h2>पासवर्ड बदलो</h2><label for="op">पुराना पासवर्ड</label><input id="op" type="password" autocomplete="current-password"><label for="np">नया पासवर्ड (कम से कम 6 अक्षर)</label><input id="np" type="password" autocomplete="new-password"><button id="cp">पासवर्ड बदलो</button></div>
+    ${isStandalone ? '' : `<button class="ghost" id="ip">${ico(IC.hostel, 18)}&nbsp;ऐप फ़ोन में इंस्टॉल करो</button>`}
+    <button class="ghost dng" id="lo">लॉगआउट</button></div>`);
+  setNav('p');
+  if ($('ip')) $('ip').onclick = doInstall;
+  $('cp').onclick = () => busy($('cp'), async () => { const r = await api('changePassword', { oldPassword: $('op').value, newPassword: $('np').value }); if (!r.ok) return toast(r.error); toast('पासवर्ड बदल गया', 'ok'); $('op').value = $('np').value = ''; });
+  $('lo').onclick = async () => { if (!(await ask('लॉगआउट करें?', '', 'लॉगआउट'))) return; await api('logout'); LS.removeItem('tok'); LS.removeItem('c_hostels'); me = null; viewLogin(); };
+}
+async function loadStats() {
+  const r = await api('adminStats'), b = $('stt'); if (!b || !r.ok) return;
+  const T = [['हॉस्टल', r.hostels], ['भरी सीट', r.filled + '/' + r.seats], ['जाँच बाकी', r.pending], ['आज की बुकिंग', r.today]];
+  b.innerHTML = T.map(([k, v]) => `<div class="tile"><b data-n="${esc(v)}">${esc(v)}</b><span>${k}</span></div>`).join('');
+  b.querySelectorAll('b').forEach(e => { const n = +e.dataset.n; if (!isNaN(n)) { const t0 = performance.now(); (function f(t) { const k = Math.min(1, (t - t0) / 700); e.textContent = Math.round(n * k); if (k < 1) requestAnimationFrame(f); })(t0); } });
+  if (r.pending) { setBadge('b', r.pending); $('pa').innerHTML = `<div class="card gold" style="margin-bottom:14px;display:flex;justify-content:space-between;align-items:center"><span><b>${r.pending}</b> बुकिंग जाँच का इंतज़ार कर रही हैं</span><button class="sm" id="pb">जाँचो</button></div>`; $('pb').onclick = () => goTab('b'); }
+}
+function viewDash() {
+  show(`${topbar(S.app_name, 'एडमिन, ' + me.name.split(' ')[0])}<div class="stg"><div class="tiles" id="stt"></div><div id="pa"></div>
+    <button class="gold" id="nh">+ नया हॉस्टल जोड़ो</button>
+    <button class="ghost" id="bn">${ico(IC.gift, 20)}&nbsp;गिफ्ट ड्रॉ और सूचनाएँ<span class="bdg" id="bc" hidden></span></button>
+    <button class="ghost" id="lg">गतिविधि का रिकॉर्ड</button></div>`);
+  setNav('d');
+  $('nh').onclick = () => viewNewHostel(); $('bn').onclick = viewNotices; $('lg').onclick = viewLog;
+  loadStats(); api('adminNotices').then(r => { if (r.ok && r.notices.length && $('bc')) { $('bc').hidden = false; $('bc').textContent = r.notices.length; } });
+}
+function viewHostelsTab() {
+  show(`${topbar('हॉस्टल', 'सभी हॉस्टल का प्रबंध')}<button class="gold" id="nh" style="margin-top:0">+ नया हॉस्टल जोड़ो</button><div id="hl" style="margin-top:16px"></div>`);
+  setNav('h'); $('nh').onclick = () => viewNewHostel(); hostelsInto($('hl'), true);
+}
+
+function showShot(src) {
+  const w = document.createElement('div'); w.className = 'ov shotv';
+  w.innerHTML = `<button class="x" id="sx" aria-label="बंद करो">✕</button><div class="sc"><img src="${src}" alt="पेमेंट स्क्रीनशॉट"></div>`;
+  document.body.appendChild(w); $('sx').onclick = () => w.remove();
+}
+/* ---------- शुरू ---------- */
+(async function start() {
+  const sp = $('splash'), t0 = Date.now();
+  if (CONFIG.API_URL.startsWith('YAHAN')) {
+    sp.classList.add('out');
+    return show(hero('सेटअप बाकी है') + '<div class="card">index.html में CONFIG.API_URL की जगह Apps Script का Web App URL डालो।</div>');
+  }
+  const r = await api('init'); /* एक ही बार में सेटिंग + लॉगिन + हॉस्टल */
+  if (r.ok) {
+    S = { ...S, ...r.settings }; SRV_V = r.v || '';
+    if (r.user) {
+      me = r.user;
+      if (r.hostels && r.hostels.ok) { r.hostels.email = me.email; try { LS.setItem('c_hostels', JSON.stringify(r.hostels)); LS.setItem('c_hostels_t', String(Date.now())); } catch (e) {} }
+    } else if (LS.getItem('tok')) LS.removeItem('tok');
+  }
+  if (S.logo) { const im = new Image(); im.alt = ''; im.onload = () => $('sl')?.appendChild(im); im.src = S.logo; }
+  document.title = S.app_name;
+  const seen = LS.getItem('seen'); LS.setItem('seen', '1');
+  const wait = (seen ? 500 : 1500) - (Date.now() - t0); if (wait > 0) await new Promise(x => setTimeout(x, wait));
+  me ? viewHome() : viewLogin(); sp.classList.add('out'); window.__ok = true;
+})();
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
+</body>
+</html>
