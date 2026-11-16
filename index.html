@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>TBL हॉस्टल्स</title>
+<title>TBL लॉटरी्स</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
 <style>
@@ -186,7 +186,7 @@ window.addEventListener('error', function (e) { window.__fatal((e.message || 'er
 window.addEventListener('unhandledrejection', function (e) { window.__fatal(String(e.reason && (e.reason.message || e.reason))); });
 setTimeout(function () { if (!window.__ok) window.__fatal('बहुत देर तक लोड नहीं हुआ'); }, 15000);
 </script>
-<div id="splash"><div class="ring"><svg viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="56"/></svg><div class="logo" id="sl"><span>TBL</span></div></div><h1>TBL ग्रुप ऑफ हॉस्टल्स</h1></div>
+<div id="splash"><div class="ring"><svg viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="56"/></svg><div class="logo" id="sl"><span>TBL</span></div></div><h1>TBL (The Biggest Lottery)</h1></div>
 <div class="wrap" id="app"></div>
 <nav id="nav" hidden></nav>
 <script>
@@ -195,7 +195,7 @@ const CONFIG = { API_URL: 'https:' + '/' + '/script.google.com/macros/s/AKfycbwF
 /* ======================================================= */
 const LS = (() => { try { localStorage.setItem('_t', '1'); localStorage.removeItem('_t'); return localStorage; } catch (e) { const m = {}; return { getItem: k => (k in m ? m[k] : null), setItem: (k, v) => { m[k] = String(v); }, removeItem: k => { delete m[k]; } }; } })();
 const $ = i => document.getElementById(i), app = $('app'), val = i => $(i).value.trim();
-let me = null, S = { app_name: 'TBL ग्रुप ऑफ हॉस्टल्स', logo: '' };
+let me = null, S = { app_name: 'TBL (The Biggest Lottery)', logo: '' };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 async function api(action, data = {}) {
@@ -320,7 +320,7 @@ function viewForgot() {
 
 /* ---------- होम ---------- */
 
-/* ---------- हॉस्टल ---------- */
+/* ---------- लॉटरी ---------- */
 const MON = ['जनवरी','फ़रवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर'];
 const fd = d => { const [y, m, x] = String(d).split('-'); return x && m ? `${+x} ${MON[+m - 1]}` : ''; };
 function compress(file, max = 900, q = .75) {
@@ -335,22 +335,22 @@ function compress(file, max = 900, q = .75) {
 let NH;
 function viewNewHostel(h) {
   NH = h ? { photos: [...h.photos], qr: h.qr || '', fac: [...h.facilities], terms: [...h.terms] } : { photos: [], qr: '', fac: [], terms: [] };
-  show(`${hero(h ? 'हॉस्टल बदलो' : 'नया हॉस्टल जोड़ो')}<div class="stg">
-  <div class="card"><h2>हॉस्टल की जानकारी</h2>
-    <label for="hn">हॉस्टल का नाम</label><input id="hn">
+  show(`${hero(h ? 'लॉटरी बदलो' : 'नया लॉटरी जोड़ो')}<div class="stg">
+  <div class="card"><h2>लॉटरी की जानकारी</h2>
+    <label for="hn">लॉटरी का नाम</label><input id="hn">
     <label>फोटो (3 तक)</label><div id="pv"></div><button class="ghost" id="pp" style="margin-top:4px">फोटो चुनो</button><input id="pf" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
     <label for="hs">कुल सीट</label><input id="hs" inputmode="numeric">
     <div class="two"><div><label for="d1">ऑफर शुरू</label><input id="d1" type="date"></div><div><label for="d2">ऑफर खत्म</label><input id="d2" type="date"></div></div>
     <label for="on">मालिक का नाम</label><input id="on"><label for="om">मालिक का मोबाइल</label><input id="om" inputmode="numeric" maxlength="10"><label for="mp">Google Maps लिंक (वैकल्पिक)</label><input id="mp" inputmode="url" placeholder="Google Maps का लिंक यहाँ चिपकाओ"></div>
-  <div class="card"><h2>गिफ्ट</h2><label for="gt">गिफ्ट का प्रकार</label><select id="gt"><option>नकद</option><option>सामान</option></select>
-    <label for="gv">रकम या सामान का नाम</label><input id="gv" placeholder="₹11,000 या स्मार्ट वॉच"><p class="hint">यह सभी छात्रों को "गिफ्ट" के नाम से दिखेगा।</p></div>
+  <div class="card"><h2>ईनाम</h2><label for="gt">ईनाम का प्रकार</label><select id="gt"><option>नकद</option><option>सामान</option></select>
+    <label for="gv">रकम या सामान का नाम</label><input id="gv" placeholder="₹11,000 या स्मार्ट वॉच"><p class="hint">यह सभी यूजरों को "ईनाम" के नाम से दिखेगा।</p></div>
   <div class="card"><h2>बुकिंग फीस और पेमेंट</h2><label for="fe">बुकिंग फीस (₹)</label><input id="fe" inputmode="numeric">
-    <p class="hint">छात्र यही रकम ऑनलाइन देगा। हॉस्टल की बाकी फीस मालिक से तय होगी।</p>
+    <p class="hint">यूजर यही रकम ऑनलाइन देगा। लॉटरी की बाकी फीस मालिक से तय होगी।</p>
     <label for="up">UPI ID</label><input id="up"><label for="bn">बैंक डिटेल</label><textarea id="bn" placeholder="नाम, खाता नंबर, IFSC"></textarea>
     <label>QR कोड</label><div id="qv"></div><button class="ghost" id="qp" style="margin-top:4px">QR चुनो</button><input id="qf" type="file" accept="image/jpeg,image/png,image/webp" hidden></div>
   <div class="card"><h2>सुविधाएँ</h2><div id="fl" style="margin-top:10px"></div><div class="two"><input id="fi" aria-label="नई सुविधा" placeholder="जैसे WiFi, मेस"><button class="add" id="fa">जोड़ो</button></div></div>
   <div class="card"><h2>नियम और शर्तें</h2><div id="tl" style="margin-top:6px"></div><div class="two"><input id="ti" aria-label="नई शर्त" placeholder="नई शर्त लिखो"><button class="add" id="ta">जोड़ो</button></div></div>
-  <button class="gold" id="sv">${h ? 'बदलाव सेव करो' : 'हॉस्टल सेव करो'}</button><div id="m" class="msg"></div><button class="ghost" id="bk">वापस</button></div>`);
+  <button class="gold" id="sv">${h ? 'बदलाव सेव करो' : 'लॉटरी सेव करो'}</button><div id="m" class="msg"></div><button class="ghost" id="bk">वापस</button></div>`);
   const draw = () => {
     $('pv').innerHTML = NH.photos.map((p, i) => `<span class="th"><img src="${p}" alt=""><button class="x" data-k="p" data-i="${i}" aria-label="हटाओ">✕</button></span>`).join('');
     $('qv').innerHTML = NH.qr ? `<span class="th"><img src="${NH.qr}" alt=""><button class="x" data-k="q" aria-label="हटाओ">✕</button></span>` : '';
@@ -400,7 +400,7 @@ async function viewAdminBookings(st = 'pending') {
     app.querySelectorAll('[data-f]').forEach(b => b.onclick = () => render(b.dataset.f));
     app.querySelectorAll('[data-shot]').forEach(b => b.onclick = () => busy(b, async () => { const x = await api('adminShot', { id: b.dataset.shot }); if (!x.ok) return toast(x.error); showShot(x.data); }));
     app.querySelectorAll('[data-d]').forEach(b => b.onclick = async () => {
-      let note = ''; if (b.dataset.d === 'reject') { note = await sheet({ title: 'बुकिंग रद्द करें?', text: 'कारण छात्र को दिखेगा। सीट वापस खुल जाएगी।', input: 'रद्द करने का कारण', ok: 'रद्द करो', danger: true }); if (!note) return; }
+      let note = ''; if (b.dataset.d === 'reject') { note = await sheet({ title: 'बुकिंग रद्द करें?', text: 'कारण यूजर को दिखेगा। सीट वापस खुल जाएगी।', input: 'रद्द करने का कारण', ok: 'रद्द करो', danger: true }); if (!note) return; }
       busy(b, async () => { const x = await api('adminDecide', { id: b.dataset.id, decision: b.dataset.d, note });
         if (!x.ok) return toast(x.error); toast(b.dataset.d === 'confirm' ? 'बुकिंग पक्की हो गई' : 'बुकिंग रद्द हो गई', 'ok'); viewAdminBookings(f); });
     });
@@ -408,15 +408,15 @@ async function viewAdminBookings(st = 'pending') {
   render(st);
 }
 
-/* ---------- छात्रों की सूची, सूचनाएँ और गिफ्ट ड्रॉ ---------- */
+/* ---------- यूजरों की सूची, सूचनाएँ और ईनाम ड्रॉ ---------- */
 async function viewStudents(hid = '') {
-  show(`${hero('हॉस्टल के छात्र')}<div class="stg"><p class="sub">पारदर्शिता के लिए नाम और नंबर आधे छुपे हैं।</p><div id="ft"></div><div class="card" id="sl3"><p class="sub">लोड हो रहा है...</p></div></div>`);
+  show(`${hero('लॉटरी के यूजर')}<div class="stg"><p class="sub">पारदर्शिता के लिए नाम और नंबर आधे छुपे हैं।</p><div id="ft"></div><div class="card" id="sl3"><p class="sub">लोड हो रहा है...</p></div></div>`);
   setNav('s');
   const r = await api('students');
   if (!r.ok) { if (r.error === 'SESSION') return sessOut(); $('sl3').innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
   const hs = [...new Map(r.students.map(s => [s.hostelId, s.hostel])).entries()];
   const render = f => {
-    $('ft').innerHTML = `<button class="chip ${f === '' ? 'on' : ''}" data-f="">सभी हॉस्टल</button>` + hs.map(([id, n]) => `<button class="chip ${f === id ? 'on' : ''}" data-f="${esc(id)}">${esc(n)}</button>`).join('');
+    $('ft').innerHTML = `<button class="chip ${f === '' ? 'on' : ''}" data-f="">सभी लॉटरी</button>` + hs.map(([id, n]) => `<button class="chip ${f === id ? 'on' : ''}" data-f="${esc(id)}">${esc(n)}</button>`).join('');
     const list = r.students.filter(s => !f || s.hostelId === f);
     $('sl3').innerHTML = list.length ? list.map(s => `<div class="p"><span class="av">${esc([...s.name][0])}</span><div><b>${esc(s.name)}</b><br><small>${esc(s.mobile)}, ${esc(s.hostel)}</small></div><span class="stc ${s.status}">${ST[s.status]}</span></div>`).join('') : '<p class="sub" style="margin:0">अभी कोई बुकिंग नहीं है।</p>';
     app.querySelectorAll('[data-f]').forEach(b => b.onclick = () => render(b.dataset.f));
@@ -425,11 +425,11 @@ async function viewStudents(hid = '') {
 }
 function roulette(el, x) {
   return new Promise(res => {
-    el.innerHTML = '<div class="rl"><small>लकी छात्र चुना जा रहा है...</small><b id="rn">...</b></div>';
+    el.innerHTML = '<div class="rl"><small>लकी यूजर चुना जा रहा है...</small><b id="rn">...</b></div>';
     const rn = el.querySelector('#rn'); let i = 0, delay = 60;
     const step = () => {
       if (i++ < 28) { rn.textContent = x.pool[Math.floor(Math.random() * x.pool.length)]; delay += 6; return setTimeout(step, delay); }
-      el.innerHTML = `<div class="rl won"><small>गिफ्ट विजेता</small><b>${esc(x.winner.name)}</b><span>${esc(x.winner.mobile)} · ${x.winner.eligible} पक्के छात्रों में से</span>
+      el.innerHTML = `<div class="rl won"><small>ईनाम विजेता</small><b>${esc(x.winner.name)}</b><span>${esc(x.winner.mobile)} · ${x.winner.eligible} पक्के यूजरों में से</span>
         <p>असली नाम (सिर्फ एडमिन के लिए): ${esc(x.contact.name)}, ${esc(x.contact.mobile)}</p></div>`;
       confetti(); res();
     };
@@ -437,15 +437,15 @@ function roulette(el, x) {
   });
 }
 async function viewNotices() {
-  show(`${hero('सूचनाएँ और गिफ्ट ड्रॉ')}<div class="stg"><div id="nl"><p class="sub">लोड हो रहा है...</p></div><button class="ghost" id="bk">वापस</button></div>`);
+  show(`${hero('सूचनाएँ और ईनाम ड्रॉ')}<div class="stg"><div id="nl"><p class="sub">लोड हो रहा है...</p></div><button class="ghost" id="bk">वापस</button></div>`);
   $('bk').onclick = viewHome;
   const r = await api('adminNotices');
   if (!r.ok) { if (r.error === 'SESSION') return sessOut(); $('nl').innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
   if (!r.notices.length) { $('nl').innerHTML = '<div class="card"><p class="sub" style="margin:0">अभी कोई नई सूचना नहीं है।</p></div>'; return; }
   $('nl').innerHTML = r.notices.map(n => `<div class="card" style="margin-bottom:14px"><h2>${esc(n.name)} फुल हो गया</h2>
     <div class="big"><b>${n.seats}/${n.seats}</b><span>सीट भर गईं</span></div>
-    <p class="sub" style="margin-top:8px">गिफ्ट: ${esc(n.gift)}<br>पक्की: ${n.confirmed}, जाँच बाकी: ${n.pending}</p>
-    ${n.ready ? `<button class="gold" data-draw="${esc(n.id)}">लकी छात्र चुनो</button><p class="hint" style="text-align:center">ड्रॉ सिर्फ एक बार चलता है।</p>` : '<button class="ghost" disabled>पहले सभी बुकिंग जाँचो</button>'}
+    <p class="sub" style="margin-top:8px">ईनाम: ${esc(n.gift)}<br>पक्की: ${n.confirmed}, जाँच बाकी: ${n.pending}</p>
+    ${n.ready ? `<button class="gold" data-draw="${esc(n.id)}">लकी यूजर चुनो</button><p class="hint" style="text-align:center">ड्रॉ सिर्फ एक बार चलता है।</p>` : '<button class="ghost" disabled>पहले सभी बुकिंग जाँचो</button>'}
     <div id="d_${esc(n.id)}"></div></div>`).join('');
   app.querySelectorAll('[data-draw]').forEach(b => b.onclick = async () => {
     if (!(await ask('ड्रॉ चलाएँ?', 'ड्रॉ सिर्फ एक बार चलता है और वापस नहीं होगा।', 'ड्रॉ चलाओ', false))) return;
@@ -454,7 +454,7 @@ async function viewNotices() {
   });
 }
 async function viewAdminStudents() {
-  show(`${hero('सभी छात्र')}<div class="stg"><input id="q" placeholder="नाम, मोबाइल या ईमेल खोजो" aria-label="खोजो"><div id="sl4" style="margin-top:12px"></div></div>`);
+  show(`${hero('सभी यूजर')}<div class="stg"><input id="q" placeholder="नाम, मोबाइल या ईमेल खोजो" aria-label="खोजो"><div id="sl4" style="margin-top:12px"></div></div>`);
   setNav('s');
   const r = await api('adminUsers');
   if (!r.ok) { if (r.error === 'SESSION') return sessOut(); $('sl4').innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
@@ -467,7 +467,7 @@ async function viewAdminStudents() {
       const x = await api('adminStatus', { email: b.dataset.e, status: b.dataset.s }); if (!x.ok) return toast(x.error); viewAdminStudents(); }));
     app.querySelectorAll('[data-ro]').forEach(b => b.onclick = async () => {
       const mk = b.dataset.rl === 'admin';
-      if (!(await ask(mk ? 'एडमिन बनाएँ?' : 'एडमिन हटाएँ?', mk ? 'यह व्यक्ति सभी छात्रों की जानकारी और पेमेंट स्क्रीनशॉट देख सकेगा।' : 'यह सिर्फ छात्र रह जाएगा।', mk ? 'एडमिन बनाओ' : 'हटाओ', !mk))) return;
+      if (!(await ask(mk ? 'एडमिन बनाएँ?' : 'एडमिन हटाएँ?', mk ? 'यह व्यक्ति सभी यूजरों की जानकारी और पेमेंट स्क्रीनशॉट देख सकेगा।' : 'यह सिर्फ यूजर रह जाएगा।', mk ? 'एडमिन बनाओ' : 'हटाओ', !mk))) return;
       busy(b, async () => { const x = await api('adminRole', { email: b.dataset.ro, role: b.dataset.rl }); if (!x.ok) return toast(x.error); toast('हो गया', 'ok'); viewAdminStudents(); });
     });
   };
@@ -507,7 +507,7 @@ function dhash(src) {
 }
 function shareHostel(id) {
   const url = location.origin + location.pathname + '#h=' + id;
-  if (navigator.share) navigator.share({ title: S.app_name, text: 'इस हॉस्टल की सीट बुक करो:', url }).catch(() => {});
+  if (navigator.share) navigator.share({ title: S.app_name, text: 'इस लॉटरी की सीट बुक करो:', url }).catch(() => {});
   else { navigator.clipboard?.writeText(url); toast('लिंक कॉपी हो गया', 'ok'); }
 }
 async function viewLog() {
@@ -518,9 +518,9 @@ async function viewLog() {
   $('lgl').innerHTML = r.log.length ? r.log.map(x => `<div class="kv"><span>${esc(x.action)}<br><small>${esc(x.detail)}</small></span><b>${esc(x.who)}<br><small>${tm(x.time)}</small></b></div>`).join('') : '<p class="sub" style="margin:0">अभी कोई रिकॉर्ड नहीं है।</p>';
 }
 function viewReceipt(x) {
-  const txt = `${S.app_name}\nबुकिंग नंबर: ${x.id}\nनाम: ${x.name}\nहॉस्टल: ${x.hostel}\nबुकिंग फीस: ₹${x.fee}\nहालत: सीट पक्की`;
+  const txt = `${S.app_name}\nबुकिंग नंबर: ${x.id}\nनाम: ${x.name}\nलॉटरी: ${x.hostel}\nबुकिंग फीस: ₹${x.fee}\nहालत: सीट पक्की`;
   show(`${hero('बुकिंग की रसीद')}<div class="stg"><div class="ticket"><small>बुकिंग नंबर</small><br><b class="no">${esc(x.id)}</b>
-    <div class="kv"><span>नाम</span><b>${esc(x.name)}</b></div><div class="kv"><span>हॉस्टल</span><b>${esc(x.hostel)}</b></div>
+    <div class="kv"><span>नाम</span><b>${esc(x.name)}</b></div><div class="kv"><span>लॉटरी</span><b>${esc(x.hostel)}</b></div>
     <div class="kv"><span>बुकिंग फीस</span><b>₹${x.fee}</b></div><div class="kv"><span>पक्की होने का समय</span><b>${tm(x.decided || x.created)}</b></div>
     <p style="margin:12px 0 0;color:var(--green);font-weight:800">सीट पक्की</p></div>
     <button class="gold" id="sh">रसीद शेयर करो</button><button class="ghost" id="bk">वापस</button></div>`);
@@ -562,8 +562,8 @@ function sheet({ title, text = '', input, ok = 'ठीक है', cancel = 'र
   });
 }
 const ask = (title, text, ok, danger = true) => sheet({ title, text, ok, danger });
-const NAVS = { student: [['h', 'हॉस्टल', 'hostel'], ['m', 'मेरी बुकिंग', 'book'], ['s', 'छात्र', 'users'], ['p', 'प्रोफाइल', 'user']],
-  admin: [['d', 'डैशबोर्ड', 'dash'], ['b', 'बुकिंग', 'book'], ['h', 'हॉस्टल', 'hostel'], ['s', 'छात्र', 'users'], ['p', 'प्रोफाइल', 'user']] };
+const NAVS = { student: [['h', 'लॉटरी', 'hostel'], ['m', 'मेरी बुकिंग', 'book'], ['s', 'यूजर', 'users'], ['p', 'प्रोफाइल', 'user']],
+  admin: [['d', 'डैशबोर्ड', 'dash'], ['b', 'बुकिंग', 'book'], ['h', 'लॉटरी', 'hostel'], ['s', 'यूजर', 'users'], ['p', 'प्रोफाइल', 'user']] };
 function setNav(active) {
   const n = $('nav'); TAB = active;
   n.innerHTML = NAVS[me.role === 'admin' ? 'admin' : 'student'].map(([k, l, i]) => `<button class="${k === active ? 'on' : ''}" data-t="${k}">${ico(IC[i])}<span>${l}</span></button>`).join('');
@@ -579,8 +579,8 @@ function goTab(t) {
 function viewHome() { me.role === 'admin' ? viewDash() : viewHostels(); }
 const topbar = (t, sub) => `<div class="top"><div class="logo sm">${logo()}</div><div><b>${esc(t)}</b><small>${esc(sub || '')}</small></div></div>`;
 
-/* ---------- हॉस्टल कार्ड, सूची, पूरा पेज ---------- */
-const gal = h => h.photos.length > 1 ? `<div class="gal">${h.photos.map(p => `<img src="${esc(p)}" alt="" loading="lazy" decoding="async">`).join('')}</div>` : h.photos[0] ? `<img src="${esc(h.photos[0])}" alt="" loading="lazy" decoding="async">` : `<span style="display:flex;flex-direction:column;align-items:center;gap:6px">${ico(IC.hostel, 40)}हॉस्टल की फोटो</span>`;
+/* ---------- लॉटरी कार्ड, सूची, पूरा पेज ---------- */
+const gal = h => h.photos.length > 1 ? `<div class="gal">${h.photos.map(p => `<img src="${esc(p)}" alt="" loading="lazy" decoding="async">`).join('')}</div>` : h.photos[0] ? `<img src="${esc(h.photos[0])}" alt="" loading="lazy" decoding="async">` : `<span style="display:flex;flex-direction:column;align-items:center;gap:6px">${ico(IC.hostel, 40)}लॉटरी की फोटो</span>`;
 function cd(h) {
   const td = new Date().toLocaleDateString('en-CA');
   if (h.filled >= h.seats) return 'सीट फुल';
@@ -601,12 +601,12 @@ function bstate(h) {
 function hcard(h, admin) {
   const left = h.seats - h.filled, p = Math.min(100, Math.round(h.filled / h.seats * 100)), [label, dis] = bstate(h);
   return `<article class="hc" data-open="${esc(h.id)}" data-hid="${esc(h.id)}"><div class="hp">${gal(h)}<div class="gr"></div>
-    <span class="rib"><small>गिफ्ट जीतो</small><b>${esc(h.gift)}</b></span>${left > 0 && left <= Math.max(5, Math.ceil(h.seats * .1)) ? `<span class="hot">सिर्फ ${left} सीट बाकी</span>` : ''}
+    <span class="rib"><small>ईनाम जीतो</small><b>${esc(h.gift)}</b></span>${left > 0 && left <= Math.max(5, Math.ceil(h.seats * .1)) ? `<span class="hot">सिर्फ ${left} सीट बाकी</span>` : ''}
     <div class="ttl"><h3>${esc(h.name)}</h3><span>मालिक: ${esc(h.ownerName)}</span></div></div>
     <div class="hb"><div class="big"><b>${h.filled}/${h.seats}</b><span>सीट भर गईं${left > 0 ? `, ${left} बाकी` : ''}</span></div>
     <div class="pt" role="progressbar" aria-label="सीट भरी" aria-valuenow="${h.filled}" aria-valuemin="0" aria-valuemax="${h.seats}"><div class="pf" style="width:${p}%"></div></div>
     <div class="kv" style="border:0"><span>बुकिंग फीस <b>₹${h.fee}</b></span><span>${cd(h)}</span></div>
-    ${h.draw ? `<div class="win"><b>गिफ्ट विजेता: ${esc(h.draw.name)}</b><span>${esc(h.draw.mobile)} · ${h.draw.eligible} पक्के छात्रों में से, ${tm(h.draw.at)}</span></div>` : ''}
+    ${h.draw ? `<div class="win"><b>ईनाम विजेता: ${esc(h.draw.name)}</b><span>${esc(h.draw.mobile)} · ${h.draw.eligible} पक्के यूजरों में से, ${tm(h.draw.at)}</span></div>` : ''}
     ${admin ? `<div class="acts"><button class="ghost" data-edit="${esc(h.id)}">बदलो</button><button class="ghost dng" data-del="${esc(h.id)}">हटाओ</button></div>`
       : `<button class="${dis ? 'ghost' : 'gold'}" ${dis ? 'disabled' : `data-book="${esc(h.id)}"`}>${label}</button>`}</div></article>`;
 }
@@ -615,7 +615,7 @@ function hostelsInto(el, admin) {
     if (!el.isConnected) return;
     if (!r.ok) { if (r.error === 'SESSION') return sessOut(); el.innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
     HL = r.hostels; HAS = r.hasActive;
-    el.innerHTML = HL.length ? HL.map(h => hcard(h, admin)).join('') : '<div class="card"><p class="sub" style="margin:0">अभी कोई हॉस्टल नहीं जुड़ा है।</p></div>';
+    el.innerHTML = HL.length ? HL.map(h => hcard(h, admin)).join('') : '<div class="card"><p class="sub" style="margin:0">अभी कोई लॉटरी नहीं जुड़ा है।</p></div>';
     const hm = /^#h=(.+)$/.exec(location.hash);
     if (hm) { const c = el.querySelector(`[data-hid="${CSS.escape(hm[1])}"]`); if (c) { c.scrollIntoView({ behavior: 'smooth', block: 'center' }); c.classList.add('flash'); } try { history.replaceState(null, '', location.pathname); } catch (x) {} }
   };
@@ -625,9 +625,9 @@ function hostelsInto(el, admin) {
     const dl = e.target.closest('[data-del]');
     if (dl) {
       const h = HL.find(y => y.id === dl.dataset.del);
-      if (!(await ask('हॉस्टल हटाएँ?', `"${h.name}" हमेशा के लिए हट जाएगा।`, 'हटाओ'))) return;
+      if (!(await ask('लॉटरी हटाएँ?', `"${h.name}" हमेशा के लिए हट जाएगा।`, 'हटाओ'))) return;
       const d = await api('adminDeleteHostel', { id: h.id }); if (!d.ok) return toast(d.error);
-      toast('हॉस्टल हट गया', 'ok'); LS.removeItem('c_hostels'); return viewHostelsTab();
+      toast('लॉटरी हट गया', 'ok'); LS.removeItem('c_hostels'); return viewHostelsTab();
     }
     const c = e.target.closest('[data-open]'); if (c) viewHostel(c.dataset.open);
   };
@@ -650,8 +650,8 @@ addEventListener('beforeinstallprompt', e => { e.preventDefault(); DP = e; });
 async function doInstall() { if (DP) { DP.prompt(); await DP.userChoice; DP = null; $('ib')?.remove(); } else toast('ब्राउज़र के मेन्यू में "Install app" चुनो', 'ok'); }
 function viewHostels() {
   show(`${topbar(S.app_name, 'नमस्ते, ' + me.name.split(' ')[0])}${installBanner()}
-    <div class="how"><div><i>1</i>सीट बुक करो</div><div><i>2</i>हॉस्टल फुल हो</div><div><i>3</i>गिफ्ट ड्रॉ, सबके सामने</div></div>
-    <h2 class="sec">हॉस्टल</h2><div id="hl"></div><div id="ww"></div>`);
+    <div class="how"><div><i>1</i>सीट बुक करो</div><div><i>2</i>लॉटरी फुल हो</div><div><i>3</i>ईनाम ड्रॉ, सबके सामने</div></div>
+    <h2 class="sec">लॉटरी</h2><div id="hl"></div><div id="ww"></div>`);
   setNav('h');
   if ($('ii')) $('ii').onclick = doInstall;
   if ($('ix')) $('ix').onclick = () => { LS.setItem('noinst', '1'); $('ib').remove(); };
@@ -659,9 +659,9 @@ function viewHostels() {
 }
 async function loadWinners() {
   const r = await api('winners'), b = $('ww'); if (!b || !r.ok || !r.winners.length) return;
-  b.innerHTML = `<h2 class="sec" style="margin-top:8px">गिफ्ट विजेता</h2><div class="wr">${r.winners.map(w => `<div class="card"><small class="sub">${esc(w.hostel)}</small>
+  b.innerHTML = `<h2 class="sec" style="margin-top:8px">ईनाम विजेता</h2><div class="wr">${r.winners.map(w => `<div class="card"><small class="sub">${esc(w.hostel)}</small>
     <div style="font-size:22px;font-weight:800;letter-spacing:2px;color:var(--green)">${esc(w.name)}</div><p class="sub" style="margin:0">${esc(w.mobile)}</p>
-    <span class="chip">${esc(w.gift)}</span><p class="hint">${w.eligible} पक्के छात्रों में से, ${tm(w.at)}</p></div>`).join('')}</div>`;
+    <span class="chip">${esc(w.gift)}</span><p class="hint">${w.eligible} पक्के यूजरों में से, ${tm(w.at)}</p></div>`).join('')}</div>`;
 }
 function viewHostel(id) {
   const h = HL.find(x => x.id === id); if (!h) return viewHome();
@@ -669,7 +669,7 @@ function viewHostel(id) {
   const wa = encodeURIComponent(`नमस्ते, मुझे ${h.name} के बारे में जानकारी चाहिए।`);
   show(`<div class="gl">${gal(h)}<button class="bk2" id="bk" aria-label="वापस">${ico(IC.back)}</button>${h.photos.length > 1 ? `<span class="cnt" id="cnt">1/${h.photos.length}</span>` : ''}</div>
     <div class="dt stg"><h1>${esc(h.name)}</h1>
-    <div class="rib2">${ico(IC.gift, 30)}<div><small>गिफ्ट जीतो (${esc(h.giftType)})</small><b>${esc(h.gift)}</b></div></div>
+    <div class="rib2">${ico(IC.gift, 30)}<div><small>ईनाम जीतो (${esc(h.giftType)})</small><b>${esc(h.gift)}</b></div></div>
     <div class="card"><div class="big"><b>${h.filled}/${h.seats}</b><span>सीट भर गईं${left > 0 ? `, ${left} बाकी` : ''}</span></div>
       <div class="pt"><div class="pf" style="width:${p}%"></div></div><p class="hint" style="margin-top:8px">${cd(h)}</p></div>
     <div class="card"><h2>मालिक से बात करो</h2><p class="sub">${esc(h.ownerName)}, ${esc(h.ownerMobile)}</p>
@@ -698,14 +698,14 @@ async function viewBook(id) {
     LS.removeItem('c_hostels');
     show(`${topbar('बुकिंग भेज दी गई', 'जाँच के बाद सीट पक्की होगी')}<div class="card stg" style="text-align:center"><svg class="okc" width="96" height="96" viewBox="0 0 64 64" fill="none" stroke="#0F5A41" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M20 33l8 8 17-18"/></svg>
       <h2>धन्यवाद, ${esc(me.name.split(' ')[0])}</h2><p class="sub">आपका स्क्रीनशॉट एडमिन को मिल गया है। तब तक सीट आपके लिए रुकी रहेगी।</p>
-      <button class="gold" id="mb2">मेरी बुकिंग देखो</button><button class="ghost" id="hm">हॉस्टल पर जाओ</button></div>`);
+      <button class="gold" id="mb2">मेरी बुकिंग देखो</button><button class="ghost" id="hm">लॉटरी पर जाओ</button></div>`);
     $('mb2').onclick = viewMine; $('hm').onclick = viewHome; confetti();
   };
   const draw = () => {
     $('st').innerHTML = `<div class="stp">${['भुगतान', 'स्क्रीनशॉट', 'पुष्टि'].map((t, i) => `<div class="${step > i + 1 ? 'dn' : step === i + 1 ? 'on' : ''}"><i>${step > i + 1 ? '✓' : i + 1}</i>${t}</div>`).join('')}</div>`;
     let body, foot;
     if (step === 1) {
-      body = `<div class="card"><div class="big"><b>₹${h.fee}</b><span>सिर्फ बुकिंग फीस</span></div><p class="hint">हॉस्टल की बाकी फीस मालिक (${esc(h.ownerName)}, ${esc(h.ownerMobile)}) से तय होगी।</p>
+      body = `<div class="card"><div class="big"><b>₹${h.fee}</b><span>सिर्फ बुकिंग फीस</span></div><p class="hint">लॉटरी की बाकी फीस मालिक (${esc(h.ownerName)}, ${esc(h.ownerMobile)}) से तय होगी।</p>
         ${upiUrl ? `<a class="lnk" href="${esc(upiUrl)}">UPI ऐप से भुगतान करो</a><p class="hint" style="text-align:center">भुगतान के बाद इसी ऐप में वापस आकर स्क्रीनशॉट डालो।</p>` : ''}
         ${h.upi ? `<label for="up">UPI ID</label><div class="two"><input id="up" value="${esc(h.upi)}" readonly><button class="add ghost" id="cp">कॉपी</button></div>` : ''}
         ${h.qr ? `<label>QR कोड</label><img class="qr" src="${esc(h.qr)}" alt="QR कोड">` : ''}${h.bank ? `<label>बैंक डिटेल</label><div class="bank">${esc(h.bank)}</div>` : ''}</div>`;
@@ -714,7 +714,7 @@ async function viewBook(id) {
       body = `<div class="card"><h2>भुगतान का स्क्रीनशॉट</h2><div class="drop" id="dp">${shot ? `<img src="${shot}" alt="">` : 'स्क्रीनशॉट चुनो'}</div><input id="sf" type="file" accept="image/jpeg,image/png,image/webp" hidden></div>`;
       foot = `<button class="ghost" id="pv">पीछे</button><button class="gold" id="nx" ${shot ? '' : 'disabled'}>आगे</button>`;
     } else {
-      body = `<div class="card"><h2>पुष्टि करो</h2><div class="kv"><span>हॉस्टल</span><b>${esc(h.name)}</b></div><div class="kv"><span>बुकिंग फीस</span><b>₹${h.fee}</b></div><div class="kv"><span>नाम</span><b>${esc(me.name)}</b></div><div class="kv"><span>मोबाइल</span><b>${esc(me.mobile || '')}</b></div></div>
+      body = `<div class="card"><h2>पुष्टि करो</h2><div class="kv"><span>लॉटरी</span><b>${esc(h.name)}</b></div><div class="kv"><span>बुकिंग फीस</span><b>₹${h.fee}</b></div><div class="kv"><span>नाम</span><b>${esc(me.name)}</b></div><div class="kv"><span>मोबाइल</span><b>${esc(me.mobile || '')}</b></div></div>
         ${h.terms.length ? `<div class="card" style="margin-top:14px"><h2>नियम और शर्तें</h2>${h.terms.map((t, i) => `<div class="tr"><span>${i + 1}. ${esc(t)}</span></div>`).join('')}</div>` : ''}
         <label class="ck"><input type="checkbox" id="ag" ${agree ? 'checked' : ''}> मैंने शर्तें पढ़ ली हैं</label>`;
       foot = '<button class="ghost" id="pv">पीछे</button><button class="gold" id="nx">बुकिंग भेजो</button>';
@@ -739,14 +739,14 @@ async function viewMine() {
   setNav('m');
   const r = await api('myBookings'), b = $('ml'); if (!b) return;
   if (!r.ok) { if (r.error === 'SESSION') return sessOut(); b.innerHTML = `<p class="sub">${esc(r.error)}</p>`; return; }
-  if (!r.bookings.length) { b.innerHTML = `<div class="card" style="text-align:center"><div style="color:var(--green)">${ico(IC.book, 40)}</div><h2>अभी कोई बुकिंग नहीं</h2><p class="sub">हॉस्टल चुनो और अपनी सीट पक्की करो।</p><button class="gold" id="gh">हॉस्टल देखो</button></div>`; $('gh').onclick = viewHostels; return; }
+  if (!r.bookings.length) { b.innerHTML = `<div class="card" style="text-align:center"><div style="color:var(--green)">${ico(IC.book, 40)}</div><h2>अभी कोई बुकिंग नहीं</h2><p class="sub">लॉटरी चुनो और अपनी सीट पक्की करो।</p><button class="gold" id="gh">लॉटरी देखो</button></div>`; $('gh').onclick = viewHostels; return; }
   b.innerHTML = r.bookings.map(x => `<div class="card" style="margin-bottom:14px"><div class="kv" style="border:0;padding:0"><span><b style="color:var(--ink);font-size:18px">${esc(x.hostel)}</b><br><small>${tm(x.created)}</small></span><b><span class="stc ${x.status}">${ST[x.status]}</span></b></div>
     ${x.status === 'rejected' && x.note ? `<p class="hint" style="color:var(--err)">कारण: ${esc(x.note)}। नया स्क्रीनशॉट डालकर दोबारा बुक कर सकते हो।</p>` : ''}
     ${x.status === 'confirmed' ? `<button class="ghost" style="margin-top:10px" data-rc="${esc(x.id)}">रसीद देखो</button>` : ''}</div>`).join('');
   b.querySelectorAll('[data-rc]').forEach(y => y.onclick = () => viewReceipt(r.bookings.find(z => z.id === y.dataset.rc)));
 }
 function viewProfile() {
-  show(`${topbar('प्रोफाइल', me.role === 'admin' ? 'एडमिन' : 'छात्र')}<div class="stg">
+  show(`${topbar('प्रोफाइल', me.role === 'admin' ? 'एडमिन' : 'यूजर')}<div class="stg">
     <div class="card"><div class="kv"><span>नाम</span><b>${esc(me.name)}</b></div><div class="kv"><span>ईमेल</span><b>${esc(me.email)}</b></div><div class="kv"><span>मोबाइल</span><b>${esc(me.mobile || '-')}</b></div><div class="kv"><span>पता</span><b>${esc(me.address || '-')}</b></div><div class="kv"><span>संस्करण</span><b>ऐप ${APP_V}<br>सर्वर ${esc(SRV_V || 'पुराना')}</b></div></div>
     <div class="card"><h2>पासवर्ड बदलो</h2><label for="op">पुराना पासवर्ड</label><input id="op" type="password" autocomplete="current-password"><label for="np">नया पासवर्ड (कम से कम 6 अक्षर)</label><input id="np" type="password" autocomplete="new-password"><button id="cp">पासवर्ड बदलो</button></div>
     ${isStandalone ? '' : `<button class="ghost" id="ip">${ico(IC.hostel, 18)}&nbsp;ऐप फ़ोन में इंस्टॉल करो</button>`}
@@ -758,22 +758,22 @@ function viewProfile() {
 }
 async function loadStats() {
   const r = await api('adminStats'), b = $('stt'); if (!b || !r.ok) return;
-  const T = [['हॉस्टल', r.hostels], ['भरी सीट', r.filled + '/' + r.seats], ['जाँच बाकी', r.pending], ['आज की बुकिंग', r.today]];
+  const T = [['लॉटरी', r.hostels], ['भरी सीट', r.filled + '/' + r.seats], ['जाँच बाकी', r.pending], ['आज की बुकिंग', r.today]];
   b.innerHTML = T.map(([k, v]) => `<div class="tile"><b data-n="${esc(v)}">${esc(v)}</b><span>${k}</span></div>`).join('');
   b.querySelectorAll('b').forEach(e => { const n = +e.dataset.n; if (!isNaN(n)) { const t0 = performance.now(); (function f(t) { const k = Math.min(1, (t - t0) / 700); e.textContent = Math.round(n * k); if (k < 1) requestAnimationFrame(f); })(t0); } });
   if (r.pending) { setBadge('b', r.pending); $('pa').innerHTML = `<div class="card gold" style="margin-bottom:14px;display:flex;justify-content:space-between;align-items:center"><span><b>${r.pending}</b> बुकिंग जाँच का इंतज़ार कर रही हैं</span><button class="sm" id="pb">जाँचो</button></div>`; $('pb').onclick = () => goTab('b'); }
 }
 function viewDash() {
   show(`${topbar(S.app_name, 'एडमिन, ' + me.name.split(' ')[0])}<div class="stg"><div class="tiles" id="stt"></div><div id="pa"></div>
-    <button class="gold" id="nh">+ नया हॉस्टल जोड़ो</button>
-    <button class="ghost" id="bn">${ico(IC.gift, 20)}&nbsp;गिफ्ट ड्रॉ और सूचनाएँ<span class="bdg" id="bc" hidden></span></button>
+    <button class="gold" id="nh">+ नया लॉटरी जोड़ो</button>
+    <button class="ghost" id="bn">${ico(IC.gift, 20)}&nbsp;ईनाम ड्रॉ और सूचनाएँ<span class="bdg" id="bc" hidden></span></button>
     <button class="ghost" id="lg">गतिविधि का रिकॉर्ड</button></div>`);
   setNav('d');
   $('nh').onclick = () => viewNewHostel(); $('bn').onclick = viewNotices; $('lg').onclick = viewLog;
   loadStats(); api('adminNotices').then(r => { if (r.ok && r.notices.length && $('bc')) { $('bc').hidden = false; $('bc').textContent = r.notices.length; } });
 }
 function viewHostelsTab() {
-  show(`${topbar('हॉस्टल', 'सभी हॉस्टल का प्रबंध')}<button class="gold" id="nh" style="margin-top:0">+ नया हॉस्टल जोड़ो</button><div id="hl" style="margin-top:16px"></div>`);
+  show(`${topbar('लॉटरी', 'सभी लॉटरी का प्रबंध')}<button class="gold" id="nh" style="margin-top:0">+ नया लॉटरी जोड़ो</button><div id="hl" style="margin-top:16px"></div>`);
   setNav('h'); $('nh').onclick = () => viewNewHostel(); hostelsInto($('hl'), true);
 }
 
@@ -789,7 +789,7 @@ function showShot(src) {
     sp.classList.add('out');
     return show(hero('सेटअप बाकी है') + '<div class="card">index.html में CONFIG.API_URL की जगह Apps Script का Web App URL डालो।</div>');
   }
-  const r = await api('init'); /* एक ही बार में सेटिंग + लॉगिन + हॉस्टल */
+  const r = await api('init'); /* एक ही बार में सेटिंग + लॉगिन + लॉटरी */
   if (r.ok) {
     S = { ...S, ...r.settings }; SRV_V = r.v || '';
     if (r.user) {
